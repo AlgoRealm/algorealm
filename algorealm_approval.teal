@@ -1,0 +1,134 @@
+#pragma version 2
+txn ApplicationID
+int 0
+==
+bnz algorealm_creation
+txn OnCompletion
+int NoOp
+==
+bnz algorealm
+int 0
+return
+algorealm_creation:
+byte "RandomicMajestyOfAlgorand"
+byte "Silvio"
+app_global_put
+byte "VerifiableMajestyOfAlgorand"
+byte "Silvio"
+app_global_put
+byte "CrownOfEntropyDonation"
+int 0
+app_global_put
+byte "SceptreOfProofDonation"
+int 0
+app_global_put
+int 1
+return
+b end_algorealm
+algorealm:
+global GroupSize
+int 1
+==
+bnz algorealm_law
+global GroupSize
+int 3
+==
+bnz algorealm_claims
+int 0
+return
+b end_algorealm
+algorealm_law:
+int 0
+byte "AlgoRealmLaw"
+app_global_get_ex
+store 0
+store 1
+load 0
+bnz promulgate_law_failure
+byte "AlgoRealmLaw"
+txna ApplicationArgs 0
+app_global_put
+b promulgate_law
+promulgate_law_failure:
+int 0
+return
+b end_algorealm
+promulgate_law:
+int 1
+return
+b end_algorealm
+algorealm_claims:
+gtxn 0 TypeEnum
+int appl
+==
+gtxn 0 NumAppArgs
+int 2
+==
+&&
+gtxn 1 TypeEnum
+int pay
+==
+&&
+gtxn 2 TypeEnum
+int axfer
+==
+&&
+gtxn 2 Sender
+byte "AlgoRealmLaw"
+app_global_get
+==
+&&
+bnz claims
+int 0
+return
+b end_algorealm
+claims:
+gtxna 0 ApplicationArgs 0
+byte "Crown"
+==
+bnz claim_crown
+gtxna 0 ApplicationArgs 0
+byte "Sceptre"
+==
+bnz claim_sceptre
+int 0
+return
+b end_algorealm
+claim_crown:
+gtxn 1 Amount
+byte "CrownOfEntropyDonation"
+app_global_get
+>
+bnz randomic_majesty
+int 0
+return
+b end_algorealm
+randomic_majesty:
+byte "RandomicMajestyOfAlgorand"
+gtxna 0 ApplicationArgs 1
+app_global_put
+byte "CrownOfEntropyDonation"
+gtxn 1 Amount
+app_global_put
+int 1
+return
+b end_algorealm
+claim_sceptre:
+gtxn 1 Amount
+byte "SceptreOfProofDonation"
+app_global_get
+>
+bnz verifiable_majesty
+int 0
+return
+b end_algorealm
+verifiable_majesty:
+byte "VerifiableMajestyOfAlgorand"
+gtxna 0 ApplicationArgs 1
+app_global_put
+byte "SceptreOfProofDonation"
+gtxn 1 Amount
+app_global_put
+int 1
+return
+end_algorealm:
