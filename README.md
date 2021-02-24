@@ -39,7 +39,7 @@ The more generous you are, the harder will be to be dethroned.
 
 ## Claim the Crown of Entropy
 
-[Crown of Entropy](https://algoexplorer.io/asset/137493252)
+[Crown of Entropy](https://algoexplorer.io/asset/137493252) for the Randomic Majesty of Algorand
 
 ```bash
 $ ./goal asset send -f YOUR_ADDRESS -t YOUR_ADDRESS --assetid 137493252 -a 0
@@ -69,7 +69,7 @@ $ ./goal clerk rawsend -f claim.sgtxn
 
 ## Claim the Sceptre of Proof
 
-[Sceptre of Proof](https://algoexplorer.io/asset/137494385)
+[Sceptre of Proof](https://algoexplorer.io/asset/137494385) for the Verifiable Majesty of Algorand
 
 ```bash
 $ ./goal asset send -f YOUR_ADDRESS -t YOUR_ADDRESS --assetid 137494385 -a 0
