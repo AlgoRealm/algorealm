@@ -97,8 +97,9 @@ $ cat claim-0.stxn claim-1.stxn claim-2.stxn > claim.sgtxn
 $ ./goal clerk rawsend -f claim.sgtxn
 ```
 
-## Development tips
+## Tip the Dev
 
-Consider also showing generosity inside your heart tipping the creator as incentive to further AlgoRealm development and expansion:
+If you enjoyed AlgoRealm or find it useful as free and open source learning example, consider tipping the Dev:
 
 `XODGWLOMKUPTGL3ZV53H3GZZWMCTJVQ5B2BZICFD3STSLA2LPSH6V6RW3I`
+
