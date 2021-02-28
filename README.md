@@ -39,21 +39,42 @@ The more generous you are, the harder will be to be dethroned.
 
 ## Claim the Crown of Entropy
 
-[Crown of Entropy](https://algoexplorer.io/asset/137493252) for the Randomic Majesty of Algorand
+1. Save the [AlgoRealm Law](https://github.com/cusma/algorealm/blob/main/algorealm_law.teal) into your node directory.
+2. Find out who owns the [Crown of Entropy](https://algoexplorer.io/asset/137493252) (keep the `CROWN_OWNER_ADDRESS`) and Opt-In.
 
 ```bash
 $ ./goal asset send -f YOUR_ADDRESS -t YOUR_ADDRESS --assetid 137493252 -a 0
+```
 
+3. Write the unsigned `crown_claim.txn` Applicarion Call transaction passing `"str:YOUR_NAME"` as `--app-arg`.
+
+```bash
 $ ./goal app call --app-id 137491307 -f YOUR_ADDRESS --app-arg "str:Crown" --app-arg "str:YOUR_NAME" -o crown_claim.txn
+```
 
+4. Write the unsigned `crown_donation.txn` Payment transaction to the Rewards Pool specifying `YOUR_DONATION` in microALGOs. The claim will be successful if `YOUR_DONATION` is grater than the current one.
+
+```bash
 $ ./goal clerk send -f YOUR_ADDRESS -t 737777777777777777777777777777777777777777777777777UFEJ2CI -a YOUR_DONATION -o crown_donation.txn
+```
 
+5. Write the unsigned `crown_transfer.txn` Asset Transfer transaction form `CROWN_OWNER_ADDRESS` to `YOUR_ADDRESS`.
+
+```bash
 $ ./goal asset send -f CROWN_OWNER_ADDRESS -t YOUR_ADDRESS --assetid 137493252 -a 1 --clawback L64GYN3IM763NDQJQD2IX35SCWQZRHWEMX55JTOUJ2PMHL6ZCMHLR4OJMU -o crown_transfer.txn
+```
 
+6. Build the unsigned Group Transaction.
+
+```bash
 $ cat crown_claim.txn crown_donation.txn crown_transfer.txn > claim.txn
 
 $ ./goal clerk group -i claim.txn -o claim.gtxn
+```
 
+7. Split the Group Transaction and sign the single transactions (no longer valid if submitted as standalone).
+
+```bash
 $ ./goal clerk split -i claim.gtxn -o unsigned_claim.txn
 
 $ ./goal clerk sign -i unsigned_claim-0.txn -o claim-0.stxn
@@ -61,7 +82,11 @@ $ ./goal clerk sign -i unsigned_claim-0.txn -o claim-0.stxn
 $ ./goal clerk sign -i unsigned_claim-1.txn -o claim-1.stxn
 
 $ ./goal clerk sign -i unsigned_claim-2.txn -p algorealm_law.teal -o claim-2.stxn
+```
 
+8. Submit the signed Group Transaction: claim the Crown of Entropy and became the Randomic Majesty of Algorand!
+
+```bash
 $ cat claim-0.stxn claim-1.stxn claim-2.stxn > claim.sgtxn
 
 $ ./goal clerk rawsend -f claim.sgtxn
@@ -69,21 +94,42 @@ $ ./goal clerk rawsend -f claim.sgtxn
 
 ## Claim the Sceptre of Proof
 
-[Sceptre of Proof](https://algoexplorer.io/asset/137494385) for the Verifiable Majesty of Algorand
+1. Save the [AlgoRealm Law](https://github.com/cusma/algorealm/blob/main/algorealm_law.teal) into your node directory.
+2. Find out who owns the [Sceptre of Proof](https://algoexplorer.io/asset/137494385) (keep the `SCEPTRE_OWNER_ADDRESS`) and Opt-In.
 
 ```bash
 $ ./goal asset send -f YOUR_ADDRESS -t YOUR_ADDRESS --assetid 137494385 -a 0
+```
 
+3. Write the unsigned `sceptre_claim.txn` Applicarion Call transaction passing `"str:YOUR_NAME"` as `--app-arg`.
+
+```bash
 $ ./goal app call --app-id 137491307 -f YOUR_ADDRESS --app-arg "str:Sceptre" --app-arg "str:YOUR_NAME" -o sceptre_claim.txn
+```
 
+4. Write the unsigned `sceptre_donation.txn` Payment transaction to the Rewards Pool specifying `YOUR_DONATION` in microALGOs. The claim will be successful if `YOUR_DONATION` is grater than the current one.
+
+```bash
 $ ./goal clerk send -f YOUR_ADDRESS -t 737777777777777777777777777777777777777777777777777UFEJ2CI -a YOUR_DONATION -o sceptre_donation.txn
+```
 
+5. Write the unsigned `sceptre_transfer.txn` Asset Transfer transaction form `SCEPTRE_OWNER_ADDRESS` to `YOUR_ADDRESS`.
+
+```bash
 $ ./goal asset send -f SCEPTRE_OWNER_ADDRESS -t YOUR_ADDRESS --assetid 137494385 -a 1 --clawback L64GYN3IM763NDQJQD2IX35SCWQZRHWEMX55JTOUJ2PMHL6ZCMHLR4OJMU -o sceptre_transfer.txn
+```
 
+6. Build the unsigned Group Transaction.
+
+```bash
 $ cat sceptre_claim.txn sceptre_donation.txn sceptre_transfer.txn > claim.txn
 
 $ ./goal clerk group -i claim.txn -o claim.gtxn
+```
 
+7. Split the Group Transaction and sign the single transactions (no longer valid if submitted as standalone).
+
+```bash
 $ ./goal clerk split -i claim.gtxn -o unsigned_claim.txn
 
 $ ./goal clerk sign -i unsigned_claim-0.txn -o claim-0.stxn
@@ -91,7 +137,11 @@ $ ./goal clerk sign -i unsigned_claim-0.txn -o claim-0.stxn
 $ ./goal clerk sign -i unsigned_claim-1.txn -o claim-1.stxn
 
 $ ./goal clerk sign -i unsigned_claim-2.txn -p algorealm_law.teal -o claim-2.stxn
+```
 
+8. Submit the signed Group Transaction: claim the Sceptre of Proof and became the Verifiable Majesty of Algorand!
+
+```bash
 $ cat claim-0.stxn claim-1.stxn claim-2.stxn > claim.sgtxn
 
 $ ./goal clerk rawsend -f claim.sgtxn
