@@ -29,9 +29,13 @@ Only generous hearts will rule over Algorand realm.
 
 Who are the Majesties of the Algorand realm?
 
+Check it on your node:
+
 ```bash
 $ ./goal app read --app-id 137491307 --global
 ```
+
+Or on [AlgoExplorer](https://algoexplorer.io/application/137491307).
 
 Show how generous is your heart donating some ALGO to the [Rewards Pool](https://developer.algorand.org/docs/reference/algorand-networks/mainnet/#rewardspool-address) and claim the title of **Randomic Majesty of Algorand** or **Verifiable Majesty of Algorand**.
 
