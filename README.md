@@ -64,7 +64,7 @@ Options:
 ```
 
 ```shell
-$ python3 aloreal_dynasty.py <purestake-api-token>
+$ python3 algorealm_dynasty.py <purestake-api-token>
 
                                __  __   ___   __  __                           
                                \*) \*)  \*/  (*/ (*/                           
