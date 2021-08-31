@@ -10,7 +10,7 @@
  _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | | 
 |____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
                  ( ( __))                                                  
-                                                                      by cusma
+                                                                   by cusma
 ```
 
 ## Incipit
@@ -27,7 +27,7 @@ Brings Consensus over realm vastness,
 So Algorand never fork.
 ```
 
-## Became a Majesty of Algorand
+## Become a Majesty of Algorand
 
 Only generous hearts will rule over Algorand realm.
 
