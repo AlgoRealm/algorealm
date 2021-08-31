@@ -63,7 +63,7 @@ Options:
   -h --help
 ```
 
-```shell
+```
 $ python3 algorealm_dynasty.py <purestake-api-token>
 
                                __  __   ___   __  __                           
