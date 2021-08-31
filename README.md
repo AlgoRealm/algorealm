@@ -1,12 +1,16 @@
 ```
-      _       __                 _______                  __                
-     / \     [  |               |_   __ \                [  |               
-    / _ \     | |  .--./)  .--.   | |__) |  .---.  ,--.   | |  _ .--..--.   
-   / ___ \    | | / /'`\;/ .'`\ \ |  __ /  / /__\\`'_\ :  | | [ `.-. .-. |  
- _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | |  
-|____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__] 
-                 ( ( __))                                                   
-                                                                  by cusma
+                           __  __   ___   __  __                           
+                           \*) \*)  \*/  (*/ (*/                           
+                            \*\_\*\_|O|_/*/_/*/                            
+                             \_______________/                             
+      _       __                 _______                  __               
+     / \     [  |               |_   __ \                [  |              
+    / _ \     | |  .--./)  .--.   | |__) |  .---.  ,--.   | |  _ .--..--.  
+   / ___ \    | | / /'`\;/ .'`\ \ |  __ /  / /__\\`'_\ :  | | [ `.-. .-. | 
+ _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | | 
+|____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
+                 ( ( __))                                                  
+                                                                   by cusma
 ```
 
 ## Incipit
@@ -23,23 +27,77 @@ Brings Consensus over realm vastness,
 So Algorand never fork.
 ```
 
-## Majesties of Algorand
+## Become a Majesty of Algorand
 
 Only generous hearts will rule over Algorand realm.
 
+Show how generous is your heart donating some ALGOs to the [Rewards Pool](https://developer.algorand.org/docs/reference/algorand-networks/mainnet/#rewardspool-address) and claim the title of **Randomic Majesty of Algorand** or **Verifiable Majesty of Algorand**.
+
+The more generous you are, the harder will be to be dethroned.
+
+## AlgoRealm Dynasty
+
 Who are the Majesties of the Algorand realm?
 
-Check it on your node:
+1. Discover it directly on [Algorand blockchain](https://algoexplorer.io/application/137491307)
 
-```bash
+2. Discover it with your node:
+```shell
 $ ./goal app read --app-id 137491307 --global
 ```
 
-Or on [AlgoExplorer](https://algoexplorer.io/application/137491307).
+3. Discover it with `algorealm_dynasty.py`:
+```shell
+AlgoRealm Dynasty
 
-Show how generous is your heart donating some ALGO to the [Rewards Pool](https://developer.algorand.org/docs/reference/algorand-networks/mainnet/#rewardspool-address) and claim the title of **Randomic Majesty of Algorand** or **Verifiable Majesty of Algorand**.
+Usage:
+  algorealm_dynasty.py <purestake-api-token>
+  algorealm_dynasty.py local-host <api-token> [--indexer-address=<ia>]
+  algorealm_dynasty.py [--help]
 
-The more generous you are, the harder will be to be dethroned.
+Commands:
+  local-host   Use your local Indexer.
+
+Options:
+  -i <ia> --indexer-address=<ia>    [default: http://localhost:8980/]
+  -h --help
+```
+
+```shell
+$ python3 aloreal_dynasty.py <purestake-api-token>
+
+                               __  __   ___   __  __                           
+                               \*) \*)  \*/  (*/ (*/                           
+                                \*\_\*\_|O|_/*/_/*/                            
+                                 \_______________/                             
+          _       __                 _______                  __               
+         / \     [  |               |_   __ \                [  |              
+        / _ \     | |  .--./)  .--.   | |__) |  .---.  ,--.   | |  _ .--..--.  
+       / ___ \    | | / /'`\;/ .'`\ \ |  __ /  / /__\\`'_\ :  | | [ `.-. .-. | 
+     _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | | 
+    |____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
+                     ( ( __))                                                  
+                                  *** DYNASTY ***                              
+                                                                                   
+    
+👑 jkbishbish claimed the Crown of Entropy
+on Block: 13578171 donating: 2 microALGOs.
+
+🪄 jkbishbish claimed the Sceptre of Proof
+on Block: 13578330 donating: 2 microALGOs.
+
+👑 tmc claimed the Crown of Entropy
+on Block: 14936018 donating: 3 microALGOs.
+
+🪄 tmc claimed the Sceptre of Proof
+on Block: 14936235 donating: 3 microALGOs.
+
+👑 nullun claimed the Crown of Entropy
+on Block: 14989913 donating: 4 microALGOs.
+
+🪄 nullun claimed the Sceptre of Proof
+on Block: 14989913 donating: 4 microALGOs.
+```
 
 ## Claim the Crown of Entropy
 
