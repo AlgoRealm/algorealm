@@ -1,0 +1,277 @@
+#pragma version 3
+global GroupSize
+int 1
+==
+bnz l6
+global GroupSize
+int 3
+==
+bnz l5
+global GroupSize
+int 6
+==
+bnz l4
+err
+l4:
+gtxn 0 TypeEnum
+int appl
+==
+gtxn 1 TypeEnum
+int appl
+==
+&&
+gtxn 2 TypeEnum
+int pay
+==
+&&
+gtxn 3 TypeEnum
+int pay
+==
+&&
+gtxn 4 TypeEnum
+int pay
+==
+&&
+gtxn 5 TypeEnum
+int axfer
+==
+&&
+gtxn 5 Fee
+int 1000
+<=
+&&
+gtxn 5 RekeyTo
+global ZeroAddress
+==
+&&
+gtxn 5 AssetCloseTo
+global ZeroAddress
+==
+&&
+gtxn 0 ApplicationID
+int 321230622
+==
+gtxna 0 ApplicationArgs 0
+byte "AsaAmountEq"
+==
+&&
+gtxna 0 Accounts 1
+gtxn 0 Sender
+==
+&&
+gtxna 0 Assets 0
+int 137493252
+==
+&&
+gtxna 0 ApplicationArgs 1
+int 1
+itob
+==
+&&
+&&
+gtxn 1 ApplicationID
+int 321230622
+==
+gtxna 1 ApplicationArgs 0
+byte "AsaAmountEq"
+==
+&&
+gtxna 1 Accounts 1
+gtxn 1 Sender
+==
+&&
+gtxna 1 Assets 0
+int 137494385
+==
+&&
+gtxna 1 ApplicationArgs 1
+int 1
+itob
+==
+&&
+&&
+gtxn 0 Sender
+gtxn 2 Receiver
+==
+&&
+gtxn 1 Sender
+gtxn 2 Receiver
+==
+&&
+gtxn 2 Sender
+gtxn 5 AssetReceiver
+==
+&&
+gtxn 3 Sender
+gtxn 2 Receiver
+==
+&&
+gtxn 3 Receiver
+addr H7N65NZIWBOKFDSRNPLLDGN72HVFKXT4RRSY7M66B6Y2PFLQFKLPLHU5JU
+==
+&&
+gtxn 4 Sender
+gtxn 2 Receiver
+==
+&&
+gtxn 4 Receiver
+addr 2PDM3E7WLVPMEKCCMNTHM3FCZNZM4CSJQUOC4SWHMFPAR3N4NXBLCQKHPE
+==
+&&
+gtxn 3 Amount
+gtxn 4 Amount
+==
+&&
+gtxn 3 Amount
+gtxn 2 Amount
+int 5
+*
+int 100
+/
+>=
+&&
+gtxn 5 XferAsset
+int 321172366
+==
+&&
+gtxn 5 AssetAmount
+int 1
+==
+&&
+gtxn 5 AssetSender
+gtxn 2 Receiver
+==
+&&
+gtxn 5 AssetReceiver
+gtxn 2 Sender
+==
+&&
+b l7
+l5:
+gtxn 0 TypeEnum
+int appl
+==
+gtxn 1 TypeEnum
+int appl
+==
+&&
+gtxn 2 TypeEnum
+int axfer
+==
+&&
+gtxn 2 Fee
+int 1000
+<=
+&&
+gtxn 2 RekeyTo
+global ZeroAddress
+==
+&&
+gtxn 2 AssetCloseTo
+global ZeroAddress
+==
+&&
+gtxn 0 ApplicationID
+int 321230622
+==
+gtxna 0 ApplicationArgs 0
+byte "AsaAmountEq"
+==
+&&
+gtxna 0 Accounts 1
+gtxn 0 Sender
+==
+&&
+gtxna 0 Assets 0
+int 137493252
+==
+&&
+gtxna 0 ApplicationArgs 1
+int 1
+itob
+==
+&&
+&&
+gtxn 1 ApplicationID
+int 321230622
+==
+gtxna 1 ApplicationArgs 0
+byte "AsaAmountEq"
+==
+&&
+gtxna 1 Accounts 1
+gtxn 1 Sender
+==
+&&
+gtxna 1 Assets 0
+int 137494385
+==
+&&
+gtxna 1 ApplicationArgs 1
+int 1
+itob
+==
+&&
+&&
+gtxn 0 Sender
+gtxn 2 AssetReceiver
+==
+&&
+gtxn 1 Sender
+gtxn 2 AssetReceiver
+==
+&&
+gtxn 2 FirstValid
+int 16250000
+>
+&&
+gtxn 2 XferAsset
+int 321172366
+==
+&&
+gtxn 2 AssetAmount
+int 1
+==
+&&
+gtxn 2 Sender
+gtxn 2 AssetSender
+==
+&&
+b l7
+l6:
+txn TypeEnum
+int axfer
+==
+txn Fee
+int 1000
+<=
+&&
+txn AssetSender
+global ZeroAddress
+==
+&&
+txn AssetCloseTo
+global ZeroAddress
+==
+&&
+txn RekeyTo
+global ZeroAddress
+==
+&&
+txn XferAsset
+int 321172366
+==
+&&
+txn AssetAmount
+int 0
+==
+&&
+txn Sender
+txn AssetReceiver
+==
+&&
+txn LastValid
+int 16052558
+<
+&&
+l7:
