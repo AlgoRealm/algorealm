@@ -14,7 +14,7 @@ As **Card Claimer**, you previously need to conquer both the [Crown of Entropy](
 The AlgoRealm Card can be claimed **starting from block 16,250,000**: hold strong both the Crown and the Sceptre and keep the throne until there!
 
 #### Card Claim's Unsigned Transactions
-Save the `algorealm_card_contract.teal` into your node directory.
+**Save** the [`algorealm_card_contract.teal`](https://github.com/cusma/algorealm/blob/algorealm_card/card/algorealm_card_contract.teal) into your node directory.
 
 1. Wear the Crown of Entropy
 ```shell
@@ -226,7 +226,7 @@ As **Seller**, you review the buy order proposal placed by the **Buyer** as *Uns
 
 Remember that, in doing so, there is no counterparty risk for both parties.
 
-Before being able to sign the rest of the trade you must **save** the `algorealm_card_contract.teal` into your node directory.
+Before being able to sign the rest of the trade you must **save** the [`algorealm_card_contract.teal`](https://github.com/cusma/algorealm/blob/algorealm_card/card/algorealm_card_contract.teal) into your node directory.
 
 #### Inspect the Unsigned Trade Group Transaction
 
