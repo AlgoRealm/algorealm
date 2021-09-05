@@ -1,6 +1,14 @@
 # AlgoRealm Card on AlgoWorld NFT
 
-The [AlgoRealm Card](https://algoexplorer.io/asset/321172366) is a unique [AlgoWorld NFT](https://algoworld.io/) Special Card, securely stored in an enchanted coffer. 
+The [AlgoRealm Card](https://algoexplorer.io/asset/321172366) is a unique [AlgoWorld NFT](https://algoworld.io/) Special Card, securely stored in an enchanted coffer.
+
+
+<center>
+ 
+ <img src="https://user-images.githubusercontent.com/65770425/132135850-c4193efe-5d21-4cd6-a9bb-ae72b3d5b357.png" alt="algorealm_card" width="250" />
+
+</center>
+
 
 Only the generous heart of the [Great Majesty of Algorand](https://github.com/cusma/algorealm) will ever able to break the spell, claim the **unique Special Card** and trade it!
 
