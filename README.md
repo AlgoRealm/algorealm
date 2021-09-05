@@ -81,22 +81,22 @@ $ python3 algorealm_dynasty.py <purestake-api-token>
                                                                                    
     
 👑 jkbishbish claimed the Crown of Entropy
-on Block: 13578171 donating: 2 microALGOs.
+on Block: 13578171 donating: 2 microALGOs to the Rewards Pool.
 
 🪄 jkbishbish claimed the Sceptre of Proof
-on Block: 13578330 donating: 2 microALGOs.
+on Block: 13578330 donating: 2 microALGOs to the Rewards Pool.
 
 👑 tmc claimed the Crown of Entropy
-on Block: 14936018 donating: 3 microALGOs.
+on Block: 14936018 donating: 3 microALGOs to the Rewards Pool.
 
 🪄 tmc claimed the Sceptre of Proof
-on Block: 14936235 donating: 3 microALGOs.
+on Block: 14936235 donating: 3 microALGOs to the Rewards Pool.
 
 👑 nullun claimed the Crown of Entropy
-on Block: 14989913 donating: 4 microALGOs.
+on Block: 14989913 donating: 4 microALGOs to the Rewards Pool.
 
 🪄 nullun claimed the Sceptre of Proof
-on Block: 14989913 donating: 4 microALGOs.
+on Block: 14989913 donating: 4 microALGOs to the Rewards Pool.
 ```
 
 ## Claim the Crown of Entropy

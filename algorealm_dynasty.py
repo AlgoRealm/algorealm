@@ -121,18 +121,19 @@ def main():
     |____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
                      ( ( __))                                                  
                                   *** DYNASTY ***                              
-                                                                                   
     """)
 
     for majesty in dynasty:
         if majesty['title'] == 'RandomicMajestyOfAlgorand':
             print(f"👑 {majesty['name']} claimed the Crown of Entropy")
             print(f"on Block: {majesty['block']} "
-                  f"donating: {majesty['donation']} microALGOs.\n")
+                  f"donating: {majesty['donation']} microALGOs "
+                  f"to the Rewards Pool.\n")
         elif majesty['title'] == 'VerifiableMajestyOfAlgorand':
             print(f"🪄 {majesty['name']} claimed the Sceptre of Proof")
             print(f"on Block: {majesty['block']} "
-                  f"donating: {majesty['donation']} microALGOs.\n")
+                  f"donating: {majesty['donation']} microALGOs "
+                  f"to the Rewards Pool.\n")
         else:
             quit("Error: Invalid AlgoRealm Majesty Title.")
 
