@@ -41,7 +41,7 @@ Join [AlgoRealm channel](https://t.me/algorealm)!
 
 ### 1. Setup
 
-1. Download the `algorealm.py` script
+1. Download the [`algorealm.py`](https://github.com/cusma/algorealm/blob/main/algorealm.py) script
 2. Install the following dependencies:
 
 ```shell
