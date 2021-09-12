@@ -35,6 +35,8 @@ Show how generous is your heart donating some ALGOs to the [Rewards Pool](https:
 
 The more generous you are, the harder will be to be dethroned.
 
+Join [AlgoRealm channel](https://t.me/algorealm)!
+
 ## Play with AlgoRealm CLI
 
 ### 1. Setup
@@ -287,3 +289,4 @@ If you enjoyed AlgoRealm or find it useful as free and open source learning exam
 
 Here you find the [AlgoRealm slide deck](https://docs.google.com/presentation/d/1pkE_VWuq_zPOtkc8tK8MYKPzdBwUQA8r5UgACpBpmvk/edit?usp=sharing) presented at Algorand's Office Hours!
 
+Join [AlgoRealm channel](https://t.me/algorealm)!
