@@ -7,7 +7,7 @@ Usage:
   algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-card <purestake-api-token> <mnemonic>
-  algorealm.py buy-order <purestake-api-token> <mnemonic> <seller-address> <microalgos> [--msg]
+  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
   algorealm.py verify-order <seller-address>
   algorealm.py sell-card <purestake-api-token> <mnemonic>
   algorealm.py [--help]
@@ -20,7 +20,7 @@ Commands:
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
   review-order     Review the partially signed buy order.
-  sell-card        Sell the AlgoRealm Card (paying 10% royalty).
+  sell-card        Sell the AlgoRealm Card (paying a 10% royalty).
 
 Options:
   -m --msg         Notify the Seller about your buy order on-chain.
@@ -361,6 +361,10 @@ def claim_nft(
         [claim_txn, donation_txn, nft_transfer],
     )
 
+    nft_name = algod_client.asset_info(nft_id)['params']['name']
+
+    print(f"Claiming the {nft_name} as {new_majesty}, "
+          f"donating {donation_amount / 10 ** 6} ALGO...\n")
     try:
         gtxn_id = algod_client.send_transactions(signed_group)
         wait_for_confirmation(algod_client, gtxn_id)
@@ -772,7 +776,6 @@ def main():
 
         name = args['<majesty-name>']
 
-        print("\n👑 Claiming the Corwn of Entropy...")
         claim_nft(
             algod_client=algod_client,
             indexer_client=indexer_client,
@@ -782,14 +785,13 @@ def main():
             donation_amount=int(args['<microalgos>']),
             nft_id=CROWN_ID,
         )
-        print(f"\n🏰 Glory to {name}, the Randomic Majesty of Algorand! 🎉\n")
+        print(f"\n👑 Glory to {name}, the Randomic Majesty of Algorand! 🎉\n")
 
     elif args['claim-sceptre']:
         opt_in(algod_client, user, SCEPTRE_ID)
 
         name = args['<majesty-name>']
 
-        print("\n🪄 Claiming the Sceptre of Proof...")
         claim_nft(
             algod_client=algod_client,
             indexer_client=indexer_client,
@@ -800,7 +802,7 @@ def main():
             nft_id=SCEPTRE_ID,
         )
         print(
-            f"\n🏰 Glory to {name}, the Verifiable Majesty of Algorand! 🎉\n")
+            f"\n🪄 Glory to {name}, the Verifiable Majesty of Algorand! 🎉\n")
 
     elif args['claim-card']:
         if algod_client.status()["last-round"] <= ALGOREALM_CARD_FIRST_BLOCK:
@@ -839,7 +841,7 @@ def main():
             f"✏️  Placing order of: {util.microalgos_to_algos(amount)} ALGO\n")
 
         seller = Account(
-            address=args['<seller-address>'],
+            address=current_owner(indexer_client, CARD_ID),
             private_key=''
         )
 
