@@ -7,29 +7,40 @@ Usage:
   algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-card <purestake-api-token> <mnemonic>
+  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
+  algorealm.py verify-order <seller-address>
+  algorealm.py sell-card <purestake-api-token> <mnemonic>
   algorealm.py [--help]
 
 Commands:
   poem             AlgoRealm's poem.
-  dynasty          The Glorious Dynasty of Algorand's Majesties.
-  claim-crown      Claim the Crown of Entropy, become the Randomic Majesty.
-  claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty.
+  dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
+  claim-crown      Claim the Crown of Entropy, become the Randomic Majesty of Algorand.
+  claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
+  buy-order        Place an order for the AlgoRealm Card.
+  review-order     Review the partially signed buy order.
+  sell-card        Sell the AlgoRealm Card (paying a 10% royalty).
 
 Options:
+  -m --msg         Notify the Seller about your buy order on-chain.
   -h --help
 """
 
+import math
 import sys
-from docopt import docopt
 import time
 import base64
+import msgpack
+import traceback
 import dataclasses
+
+from docopt import docopt
 
 from algosdk.v2client import algod, indexer
 from algosdk.error import AlgodHTTPError, IndexerHTTPError
 from algosdk.future import transaction
-from algosdk import mnemonic, account
+from algosdk import mnemonic, account, util
 
 
 @dataclasses.dataclass
@@ -80,9 +91,18 @@ ALGOREALM_LAW = Account(
 )
 
 ALGOREALM_CARD_FIRST_BLOCK = 16250000
+ROYALTY_PERC = 5
+ROYALTY_COLLECTOR_1 = Account(
+    address='H7N65NZIWBOKFDSRNPLLDGN72HVFKXT4RRSY7M66B6Y2PFLQFKLPLHU5JU',
+    private_key=''
+)
+ROYALTY_COLLECTOR_2 = Account(
+    address='2PDM3E7WLVPMEKCCMNTHM3FCZNZM4CSJQUOC4SWHMFPAR3N4NXBLCQKHPE',
+    private_key=''
+)
 ASA_STATE_OBSERVER_APP_ID = 321230622
-ALGOREALM_CARD_ID = 321172366
-ALGOREALM_CARD_CONTRACT_BYTECODE = \
+CARD_ID = 321172366
+CARD_CONTRACT_BYTECODE = \
     'AyAOAQMGBOgHnq6WmQGE9sdB8f7HQQVkjueSmQGQ6d8HAM7i0wcmAwtBc2FBbW91bnRFcS' \
     'A/2+63KLBcoo5Ra9axmb/R6lVefIxlj7PeD7GnlXAqliDTxs2T9l1ewihCY2Z2bKLLcs4K' \
     'SYUcLkrHYV4I7bxtwjIEIhJAAaIyBCMSQAD4MgQkEkAAAQAzABAkEjMBECQSEDMCECISED' \
@@ -96,14 +116,14 @@ ALGOREALM_CARD_CONTRACT_BYTECODE = \
     'EDMCEiISEDMCADMCExIQQgA0MRAlEjEBIQQOEDETMgMSEDEVMgMSEDEgMgMSEDERIQoSED' \
     'ESIQwSEDEAMRQSEDEEIQ0MEA=='
 
-ALGOREALM_CARD_CONTRACT_LSIG = transaction.LogicSig(
-    base64.decodebytes(ALGOREALM_CARD_CONTRACT_BYTECODE.encode())
+CARD_CONTRACT_LSIG = transaction.LogicSig(
+    base64.decodebytes(CARD_CONTRACT_BYTECODE.encode())
 )
 
-ALGOREALM_CARD_CONTRACT = Account(
-    address=ALGOREALM_CARD_CONTRACT_LSIG.address(),
+CARD_CONTRACT = Account(
+    address=CARD_CONTRACT_LSIG.address(),
     private_key=None,
-    lsig=ALGOREALM_CARD_CONTRACT_LSIG,
+    lsig=CARD_CONTRACT_LSIG,
 )
 
 
@@ -121,7 +141,8 @@ def wait_for_confirmation(client: algod.AlgodClient, txid: str):
         client.status_after_block(last_round)
         txinfo = client.pending_transaction_info(txid)
 
-    print(f"Transaction {txid} confirmed in round {txinfo.get('confirmed-round')}.")
+    print(
+        f"Transaction {txid} confirmed in round {txinfo.get('confirmed-round')}.")
     return txinfo
 
 
@@ -140,7 +161,6 @@ def sign_send_wait(
     """Sign a transaction, submit it, and wait for its confirmation."""
     signed_txn = sign(account, txn)
     tx_id = signed_txn.transaction.get_txid()
-    transaction.write_to_file([signed_txn], "/tmp/txn.signed", overwrite=True)
     algod_client.send_transactions([signed_txn])
     wait_for_confirmation(algod_client, tx_id)
     return algod_client.pending_transaction_info(tx_id)
@@ -156,7 +176,6 @@ def group_and_sign(signers, txns):
         t.group = gid
         signed_group.append(sign(signer, t))
 
-    transaction.write_to_file(signed_group, "/tmp/txn.signed", overwrite=True)
     return signed_group
 
 
@@ -169,7 +188,7 @@ def search_algorelm_calls(indexer_client: indexer.IndexerClient):
             limit=1000,
             next_page=nexttoken,
             application_id=ALGOREALM_APP_ID,
-            # min_round=ALGOREALM_FIRST_BLOCK,
+            min_round=ALGOREALM_FIRST_BLOCK,
         )
         calls += result['transactions']
         numtx = len(result['transactions'])
@@ -267,7 +286,7 @@ def current_owner(indexer_client: indexer.IndexerClient, nft_id: int):
         finally:
             attempts += 1
     if not nft_txns:
-        quit("Unable to connect to Indexer Client. Check your API token!")
+        quit("❌ Unable to connect to Indexer Client. Check your API token!")
 
     nft_txns.reverse()
     for txn in nft_txns:
@@ -280,11 +299,13 @@ def opt_in(
         user: Account,
         nft_id: int,
 ):
+    nft_name = algod_client.asset_info(nft_id)['params']['name']
     optin = ''
     while not optin:
         optin = str(input(
-            f"Do you want to opt-in the asset {nft_id}? (Y/n) "
+            f"Do you want to opt-in the {nft_name} (ID: {nft_id})? (Y/n) "
         ))
+        print("")
         if optin.lower() == 'y':
             params = algod_client.suggested_params()
 
@@ -340,6 +361,10 @@ def claim_nft(
         [claim_txn, donation_txn, nft_transfer],
     )
 
+    nft_name = algod_client.asset_info(nft_id)['params']['name']
+
+    print(f"Claiming the {nft_name} as {new_majesty}, "
+          f"donating {donation_amount / 10 ** 6} ALGO...\n")
     try:
         gtxn_id = algod_client.send_transactions(signed_group)
         wait_for_confirmation(algod_client, gtxn_id)
@@ -385,16 +410,16 @@ def claim_card(algod_client: algod.AlgodClient, claimer: Account):
     )
 
     nft_card_xfer = transaction.AssetTransferTxn(
-        sender=ALGOREALM_CARD_CONTRACT.address,
+        sender=CARD_CONTRACT.address,
         sp=params,
         receiver=claimer.address,
         amt=1,
-        index=ALGOREALM_CARD_ID,
-        revocation_target=ALGOREALM_CARD_CONTRACT.address,
+        index=CARD_ID,
+        revocation_target=CARD_CONTRACT.address,
     )
 
     signed_group = group_and_sign(
-        [claimer, claimer, ALGOREALM_CARD_CONTRACT],
+        [claimer, claimer, CARD_CONTRACT],
         [proof_crown_ownership, proof_sceptre_ownership, nft_card_xfer],
     )
 
@@ -408,16 +433,254 @@ def claim_card(algod_client: algod.AlgodClient, claimer: Account):
              "of Proof first!\n")
 
 
-def main():
-    if len(sys.argv) == 1:
-        # Display help if no arguments, see:
-        # https://github.com/docopt/docopt/issues/420#issuecomment-405018014
-        sys.argv.append('--help')
+def card_order(
+        algod_client: algod.AlgodClient,
+        buyer: Account,
+        seller: Account,
+        price: int,
+):
+    params = algod_client.suggested_params()
 
-    args = docopt(__doc__)
+    proof_crown_ownership = proof_asa_amount_eq_txn(
+        algod_client=algod_client,
+        sender=seller,
+        asa_id=CROWN_ID,
+        asa_amount=1,
+    )
+
+    proof_sceptre_ownership = proof_asa_amount_eq_txn(
+        algod_client=algod_client,
+        sender=seller,
+        asa_id=SCEPTRE_ID,
+        asa_amount=1,
+    )
+
+    nft_card_payment = transaction.PaymentTxn(
+        sender=buyer.address,
+        sp=params,
+        receiver=seller.address,
+        amt=price,
+    )
+
+    royalty_amount = math.ceil(price * ROYALTY_PERC / 100)
+
+    royalty_1_payment = transaction.PaymentTxn(
+        sender=seller.address,
+        sp=params,
+        receiver=ROYALTY_COLLECTOR_1.address,
+        amt=royalty_amount,
+    )
+
+    royalty_2_payment = transaction.PaymentTxn(
+        sender=seller.address,
+        sp=params,
+        receiver=ROYALTY_COLLECTOR_2.address,
+        amt=royalty_amount,
+    )
+
+    nft_card_xfer = transaction.AssetTransferTxn(
+        sender=CARD_CONTRACT.address,
+        sp=params,
+        receiver=buyer.address,
+        amt=1,
+        index=CARD_ID,
+        revocation_target=seller.address,
+    )
+
+    trade_gtxn = [
+        proof_crown_ownership,
+        proof_sceptre_ownership,
+        nft_card_payment,
+        royalty_1_payment,
+        royalty_2_payment,
+        nft_card_xfer
+    ]
+
+    transaction.assign_group_id(trade_gtxn)
+    signed_nft_card_payment = trade_gtxn[2].sign(buyer.private_key)
+    trade_gtxn[2] = signed_nft_card_payment
+    trade_gtxn[5] = transaction.LogicSigTransaction(trade_gtxn[5],
+                                                    CARD_CONTRACT.lsig)
+    transaction.write_to_file(trade_gtxn, 'trade_raw.gtxn', overwrite=True)
 
     print(
-        r"""
+        "📝 Partially signed trade group transaction saved as: 'trade.gtxn'\n")
+
+    return trade_gtxn
+
+
+def notify(
+        algod_client: algod.AlgodClient,
+        user: Account,
+        seller: Account,
+        trade_gtxn: list
+):
+    params = algod_client.suggested_params()
+
+    note = {
+        'buy_order': 'AlgoRealm Special Card',
+        'asset_id': CARD_ID,
+        'algo_amount': trade_gtxn[2].transaction.amt / 10 ** 6,
+        'algo_royalty': (trade_gtxn[3].amt + trade_gtxn[4].amt) / 10 ** 6,
+        'last_valid_block': trade_gtxn[2].transaction.last_valid_round
+    }
+
+    bytes_note = msgpack.packb(note)
+
+    notification_txn = transaction.PaymentTxn(
+        sender=user.address,
+        sp=params,
+        receiver=seller.address,
+        amt=0,
+        note=bytes_note,
+    )
+
+    signed_txn = sign(user, notification_txn)
+    tx_id = signed_txn.transaction.get_txid()
+    print("✉️  Sending buy order notification to the Seller...\n")
+    algod_client.send_transactions([signed_txn])
+    wait_for_confirmation(algod_client, tx_id)
+    print("\n📄 Buy order notification:\n"
+          "https://mainnet.algoexplorer.io/tx/" + tx_id)
+
+
+def verify_buy_order(seller_address: str):
+    trade_gtxn = transaction.retrieve_from_file('trade_raw.gtxn')
+
+    # Check TXN 0: Crown Proof of Ownership
+    try:
+        assert trade_gtxn[0].type == 'appl'
+        assert trade_gtxn[0].index == ASA_STATE_OBSERVER_APP_ID
+        assert trade_gtxn[0].app_args[0] == b'AsaAmountEq'
+        assert trade_gtxn[0].app_args[1] == b'\x00\x00\x00\x00\x00\x00\x00\x01'
+        assert trade_gtxn[0].foreign_assets[0] == CROWN_ID
+        assert trade_gtxn[0].accounts[0] == seller_address
+        assert trade_gtxn[0].sender == seller_address
+        assert trade_gtxn[0].fee <= 1000
+        assert trade_gtxn[0].rekey_to is None
+    except AssertionError:
+        _, _, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+        quit("Transaction 0 - Crown Proof of Ownership is invalid: {}".format(
+            text))
+
+    # Check TXN 1: Sceptre Proof of Ownership
+    try:
+        assert trade_gtxn[1].type == 'appl'
+        assert trade_gtxn[1].index == ASA_STATE_OBSERVER_APP_ID
+        assert trade_gtxn[1].app_args[0] == b'AsaAmountEq'
+        assert trade_gtxn[1].app_args[1] == b'\x00\x00\x00\x00\x00\x00\x00\x01'
+        assert trade_gtxn[1].foreign_assets[0] == SCEPTRE_ID
+        assert trade_gtxn[1].accounts[0] == seller_address
+        assert trade_gtxn[1].sender == seller_address
+        assert trade_gtxn[1].fee <= 1000
+        assert trade_gtxn[1].rekey_to is None
+    except AssertionError:
+        _, _, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+        quit(
+            "Transaction 1 - Sceptre Proof of Ownership is invalid: {}".format(
+                text))
+
+    # Check TXN 2: Card Payment
+    try:
+        assert trade_gtxn[2].transaction.type == 'pay'
+        assert trade_gtxn[2].transaction.receiver == seller_address
+    except AssertionError:
+        _, _, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+        quit("Transaction 2 - Card Payment is invalid: {}".format(text))
+
+    # Check TXN 3: Royalty 1 Payment
+    try:
+        assert trade_gtxn[3].type == 'pay'
+        assert trade_gtxn[3].sender == seller_address
+        assert trade_gtxn[3].receiver == ROYALTY_COLLECTOR_1.address
+        assert trade_gtxn[3].fee <= 1000
+        assert trade_gtxn[3].rekey_to is None
+    except AssertionError:
+        _, _, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+        quit("Transaction 3 - Royalty 1 Payment is invalid: {}".format(text))
+
+    # Check TXN 4: Royalty 3 Payment
+    try:
+        assert trade_gtxn[4].type == 'pay'
+        assert trade_gtxn[4].sender == seller_address
+        assert trade_gtxn[4].receiver == ROYALTY_COLLECTOR_2.address
+        assert trade_gtxn[4].fee <= 1000
+        assert trade_gtxn[4].rekey_to is None
+    except AssertionError:
+        _, _, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+        quit("Transaction 4 - Royalty 2 Payment is invalid: {}".format(text))
+
+    # Check TXN 5: Card Transfer
+    try:
+        assert trade_gtxn[5].transaction.type == 'axfer'
+        assert trade_gtxn[5].transaction.index == CARD_ID
+        assert trade_gtxn[5].transaction.amount == 1
+        assert trade_gtxn[5].transaction.sender == CARD_CONTRACT.address
+        assert trade_gtxn[5].transaction.receiver == trade_gtxn[
+            2].transaction.sender
+        assert trade_gtxn[5].transaction.revocation_target == seller_address
+        assert trade_gtxn[5].transaction.fee <= 1000
+        assert trade_gtxn[5].transaction.rekey_to is None
+    except AssertionError:
+        _, _, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+        quit("Transaction 5 - Card Transfer is invalid: {}".format(text))
+
+    return trade_gtxn
+
+
+def order_summary(trade_gtxn: list):
+    return f"""
+    * =========================== ORDER SUMMARY =========================== *
+
+       BUYER:\t{trade_gtxn[2].transaction.sender}
+       SELLER:\t{trade_gtxn[2].transaction.receiver}
+       AMOUNT:\t{trade_gtxn[2].transaction.amt / 10 ** 6} ALGO
+       ROYALTY:\t{(trade_gtxn[3].amt + trade_gtxn[4].amt) / 10 ** 6} ALGO
+
+       LAST VALID BLOCK: {trade_gtxn[2].transaction.last_valid_round}
+
+    * ===================================================================== *
+    """
+
+
+def sell_card(algod_client: algod.AlgodClient, user: Account):
+    trade_gtxn = transaction.retrieve_from_file('trade_raw.gtxn')
+
+    signed_crown_proof = trade_gtxn[0].sign(user.private_key)
+    signed_sceptre_proof = trade_gtxn[1].sign(user.private_key)
+    signed_royalty_1 = trade_gtxn[3].sign(user.private_key)
+    signed_royalty_2 = trade_gtxn[4].sign(user.private_key)
+
+    trade_gtxn[0] = signed_crown_proof
+    trade_gtxn[1] = signed_sceptre_proof
+    trade_gtxn[3] = signed_royalty_1
+    trade_gtxn[4] = signed_royalty_2
+
+    print(f"🤝 Selling the AlgoRealm Special Card for "
+          f"{trade_gtxn[2].transaction.amt / 10 ** 6} ALGO:\n")
+    try:
+        gtxn_id = algod_client.send_transactions(trade_gtxn)
+    except AlgodHTTPError:
+        quit(
+            "You must hold the 👑 Crown and the 🪄 Scepter to sell the Card!\n")
+    else:
+        return wait_for_confirmation(algod_client, gtxn_id)
+
+
+def title():
+    return r"""
                                __  __   ___   __  __                           
                                \*) \*)  \*/  (*/ (*/                           
                                 \*\_\*\_|O|_/*/_/*/                            
@@ -430,12 +693,11 @@ def main():
     |____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
                      ( ( __))
                                                                     by cusma                                                  
-        """
-    )
+    """
 
-    if args['poem']:
-        return print(
-            r"""
+
+def poem():
+    return r"""
                     ,-----------------------------------------.  
                    (_\                                         \ 
                       |  There was a time                       |
@@ -452,12 +714,26 @@ def main():
                                            \\                    
                                             ))                   
                                             ^                    
-            """
-        )
+    """
 
-    # Check user's inputs
-    assert isinstance(args['<purestake-api-token>'], str)
 
+def main():
+    if len(sys.argv) == 1:
+        # Display help if no arguments, see:
+        # https://github.com/docopt/docopt/issues/420#issuecomment-405018014
+        sys.argv.append('--help')
+
+    args = docopt(__doc__)
+
+    print(title())
+
+    if args['poem']:
+        return print(poem())
+
+    if args['verify-order']:
+        return print(order_summary(verify_buy_order(args['<seller-address>'])))
+
+    # Clients
     token = args['<purestake-api-token>']
     header = {'X-Api-key': token}
 
@@ -481,11 +757,13 @@ def main():
         )
         return print(*['\n', *history(indexer_client)])
 
+    # Checking mnemonic format
     try:
         assert len(args['<mnemonic>'].split()) == 25
     except AssertionError:
         quit('The mnemonic phrase must contain 25 words, '
              'formatted as: "word_1 word_2 ... word_25"\n')
+
     private_key = mnemonic.to_private_key(args['<mnemonic>'])
 
     user = Account(
@@ -498,7 +776,6 @@ def main():
 
         name = args['<majesty-name>']
 
-        print("\n👑 Claiming the Corwn of Entropy...")
         claim_nft(
             algod_client=algod_client,
             indexer_client=indexer_client,
@@ -508,14 +785,13 @@ def main():
             donation_amount=int(args['<microalgos>']),
             nft_id=CROWN_ID,
         )
-        print(f"\n🏰 Glory to {name}, the Randomic Majesty of Algorand! 🎉\n")
+        print(f"\n👑 Glory to {name}, the Randomic Majesty of Algorand! 🎉\n")
 
     elif args['claim-sceptre']:
         opt_in(algod_client, user, SCEPTRE_ID)
 
         name = args['<majesty-name>']
 
-        print("\n🪄 Claiming the Sceptre of Proof...")
         claim_nft(
             algod_client=algod_client,
             indexer_client=indexer_client,
@@ -525,7 +801,8 @@ def main():
             donation_amount=int(args['<microalgos>']),
             nft_id=SCEPTRE_ID,
         )
-        print(f"\n🏰 Glory to {name}, the Verifiable Majesty of Algorand! 🎉\n")
+        print(
+            f"\n🪄 Glory to {name}, the Verifiable Majesty of Algorand! 🎉\n")
 
     elif args['claim-card']:
         if algod_client.status()["last-round"] <= ALGOREALM_CARD_FIRST_BLOCK:
@@ -533,19 +810,19 @@ def main():
                          f"{ALGOREALM_CARD_FIRST_BLOCK}... ⏳\n")
 
         algorelm_card_contract = algod_client.account_info(
-            ALGOREALM_CARD_CONTRACT.address
+            CARD_CONTRACT.address
         )
 
         assets = algorelm_card_contract['assets']
 
         card_nft = list(filter(
-            lambda asset: asset['asset-id'] == ALGOREALM_CARD_ID, assets))[0]
+            lambda asset: asset['asset-id'] == CARD_ID, assets))[0]
 
         if card_nft['amount'] == 0:
             return print("🔓 The enchanted coffer is empty! "
                          "The AlgoRealm Special Card has been claimed!\n")
 
-        opt_in(algod_client, user, ALGOREALM_CARD_ID)
+        opt_in(algod_client, user, CARD_ID)
 
         print("\n✨ Whispering words of wisdom...")
         claim_card(
@@ -554,6 +831,36 @@ def main():
         )
         print(f"\n 📜 The spell has been broken! "
               f"The AlgoRealm Special Card is yours! 🎉\n")
+
+    if args['buy-order']:
+        opt_in(algod_client, user, CARD_ID)
+
+        amount = int(args['<microalgos>'])
+
+        print(
+            f"✏️  Placing order of: {util.microalgos_to_algos(amount)} ALGO\n")
+
+        seller = Account(
+            address=current_owner(indexer_client, CARD_ID),
+            private_key=''
+        )
+
+        trade_gtxn = card_order(
+            algod_client=algod_client,
+            buyer=user,
+            seller=seller,
+            price=amount
+        )
+
+        if args['--msg']:
+            notify(algod_client, user, seller, trade_gtxn)
+
+        return print(
+            "\n📦 Send `trade.gtxn` file to the Seller to finalize the trade!\n"
+        )
+
+    if args['sell-card']:
+        sell_card(algod_client, user)
 
     else:
         quit("\nError: read AlgoRealm '--help'!\n")

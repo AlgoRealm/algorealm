@@ -68,16 +68,23 @@ Usage:
   algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-card <purestake-api-token> <mnemonic>
+  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
+  algorealm.py verify-order <seller-address>
+  algorealm.py sell-card <purestake-api-token> <mnemonic>
   algorealm.py [--help]
 
 Commands:
   poem             AlgoRealm's poem.
-  dynasty          The Glorious Dynasty of Algorand's Majesties.
-  claim-crown      Claim the Crown of Entropy, become the Randomic Majesty.
-  claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty.
+  dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
+  claim-crown      Claim the Crown of Entropy, become the Randomic Majesty of Algorand.
+  claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
+  buy-order        Place an order for the AlgoRealm Card.
+  review-order     Review the partially signed buy order.
+  sell-card        Sell the AlgoRealm Card (paying 10% royalty).
 
 Options:
+  -m --msg         Notify the Seller about your buy order on-chain.
   -h --help
 ```
 
@@ -145,7 +152,7 @@ $ python3 algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-nam
 $ python3 algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"`
+**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 5. Claim the AlgoRealm Special Card
 
@@ -157,15 +164,73 @@ The [AlgoRealm Card](https://algoexplorer.io/asset/321172366) is a unique [AlgoW
 
 Only the generous heart of the [Great Majesty of Algorand](https://github.com/cusma/algorealm) will ever able to break the spell, claim the **unique Special Card** and trade it! So, you previously need to conquer both the [Crown of Entropy](https://github.com/cusma/algorealm#claim-the-crown-of-entropy) and the [Sceptre of Proof](https://github.com/cusma/algorealm#claim-the-sceptre-of-proof), ascending to [AlgoRealm's throne](https://algoexplorer.io/application/137491307).
 
-The AlgoRealm Card can be claimed **starting from block 16,250,000**: hold strong both the Crown and the Sceptre and keep the throne until there!
+The AlgoRealm Card can be claimed **starting from block 16,250,000** using the command `claim-card`: hold strong both the Crown and the Sceptre and keep the throne until there!
 
 ```shell
 $ python3 algorealm.py claim-card <purestake-api-token> <mnemonic>
 ```
 
+**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+
+### 6. Place a buy-order
+
+As a **Buyer** you can easily place a **buy-order** proposal to the **Seller** using the `buy-order` command. You just need to choose the `<microalgos>` amount for the buy order proposal.
+
+Using the  `--msg`  option the **Seller** will receive a notification on-chain, being acknowledge about the new buy-order proposal.
+
+```shell
+$ python3 algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
+```
+
+**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+
+As result, a *Partially Signed Trade Group Transaction* is created as `trade.gtx` file in the `algorealm.py` CLI directory. Note that there is **no counter-party risk** in this operation: as a **Buyer** you can safely send the `trade.gtxn` file to the **Seller**, being sure that the trade will be executed **if and only if** the Seller will transfers the AlgoRealm Special Card to you.
+
+### 7. Verify a buy-order
+
+As a **Seller** you can review and verify the buy-order proposal, validating the amounts of the trade. Place the `trade.gtxn` file, received from the **Buyer**, in the same directory of your `algorealm.py` CLI.
+
+The `verify-order` command requires your `<seller-address>` as argument.
+
+```shell
+$ python3 algorealm.py verify-order <seller-address>
+```
+
+Some compliancy checks are performed over the `trade.gtx` file before displaying the buy-order summary:
+
+```shell
+    * =========================== ORDER SUMMARY =========================== *
+    
+       BUYER:		<BUYER_ADDRESS>
+       SELLER:	<SELLER_ADDRESS>
+       AMOUNT:	1.0 ALGO
+       ROYALTY:	0.1 ALGO
+       
+       LAST VALID BLOCK: 13184621
+    
+    * ===================================================================== *
+```
+
+If you agree with the buy-order proposal you can sell the AlgoRealm Special Card.
+
+### 8. Sell card
+
+As a **Seller**, if you agree with the buy-order proposal, you can sell your AlgoRealm Special Card using the command `sell-card`.
+
+```shell
+$ python3 algorealm.py sell-card <purestake-api-token> <mnemonic>
+```
+
+**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+
+
+
 ## Play with goal CLI
 
 AlgoRealm could also be a good challenge to [run your own Algorand node](https://developer.algorand.org/docs/run-a-node/setup/install/) and familiarise the [goal CLI commands](https://developer.algorand.org/docs/reference/cli/goal/goal/).
+
+<details>
+  <summary>Click to expand the guidelines!</summary>
 
 ### 1. Claim the Crown of Entropy
 
@@ -280,6 +345,10 @@ $ ./goal clerk rawsend -f claim.sgtxn
 ### 3. Claim the AlgoRealm Special Card
 
 You can also claim and trade the **AlgoRealm Special Card** using the goal CLI [following these instructions](https://github.com/cusma/algorealm/tree/main/card#readme).
+
+</details>
+
+
 
 ## Tip the Dev
 
