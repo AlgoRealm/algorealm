@@ -46,6 +46,7 @@ Join [AlgoRealm channel](https://t.me/algorealm)!
 
 ```shell
 $ pip3 install docopt --upgrade
+$ pip3 install msgpack --upgrade
 $ pip3 install py-algorand-sdk --upgrade
 ```
 
