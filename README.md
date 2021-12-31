@@ -66,30 +66,30 @@ AlgoRealm, only generous heart will ever rule over Algorand. (by cusma)
 Usage:
   algorealm.py poem
   algorealm.py dynasty <purestake-api-token>
+  algorealm.py verify-order <purestake-api-token> <seller-address>
   algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-card <purestake-api-token> <mnemonic>
-  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
-  algorealm.py verify-order <seller-address>
+  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--notify]
   algorealm.py sell-card <purestake-api-token> <mnemonic>
   algorealm.py [--help]
 
 Commands:
   poem             AlgoRealm's poem.
   dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
+  verify-order     Verify the partially signed AlgoRealm Card buy order.
   claim-crown      Claim the Crown of Entropy, become the Randomic Majesty of Algorand.
   claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
-  review-order     Review the partially signed buy order.
-  sell-card        Sell the AlgoRealm Card (paying 10% royalty).
+  sell-card        Sell the AlgoRealm Card (paying a 10% royalty).
 
 Options:
-  -m --msg         Notify the Seller about your buy order on-chain.
+  -n --notify      Notify the Seller about your buy order on-chain.
   -h --help
 ```
 
-**NOTE:** keep your `<mnemonic>` safe! Although you will only use it on you local machine, is it strongly recommended to make use of a dedicated account just to play AlgoRealm!
+⚠️ Keep your `<mnemonic>` safe! Although you will only use it on you local machine, is it strongly recommended to make use of a dedicated account just to play AlgoRealm!
 
 ### 3. AlgoRealm Dynasty
 
@@ -153,7 +153,7 @@ $ python3 algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-nam
 $ python3 algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 5. Claim the AlgoRealm Special Card
 
@@ -171,19 +171,19 @@ The AlgoRealm Card can be claimed **starting from block 16,250,000** using the c
 $ python3 algorealm.py claim-card <purestake-api-token> <mnemonic>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 6. Place a buy-order
 
 As a **Buyer** you can easily place a **buy-order** proposal to the **Seller** using the `buy-order` command. You just need to choose the `<microalgos>` amount for the buy order proposal.
 
-Using the  `--msg`  option the **Seller** will receive a notification on-chain, being acknowledge about the new buy-order proposal.
+Using the  `--notify`  option the **Seller** will receive a notification on-chain, being acknowledge about the new buy-order proposal.
 
 ```shell
-$ python3 algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
+$ python3 algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--notify]
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 As result, a *Partially Signed Trade Group Transaction* is created as `trade.gtx` file in the `algorealm.py` CLI directory. Note that there is **no counter-party risk** in this operation: as a **Buyer** you can safely send the `trade.gtxn` file to the **Seller**, being sure that the trade will be executed **if and only if** the Seller will transfers the AlgoRealm Special Card to you.
 
@@ -194,7 +194,7 @@ As a **Seller** you can review and verify the buy-order proposal, validating the
 The `verify-order` command requires your `<seller-address>` as argument.
 
 ```shell
-$ python3 algorealm.py verify-order <seller-address>
+$ python3 algorealm.py verify-order <purestake-api-token> <seller-address>
 ```
 
 Some compliancy checks are performed over the `trade.gtx` file before displaying the buy-order summary:
@@ -222,7 +222,7 @@ As a **Seller**, if you agree with the buy-order proposal, you can sell your Alg
 $ python3 algorealm.py sell-card <purestake-api-token> <mnemonic>
 ```
 
-**NOTE:** enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 
 
