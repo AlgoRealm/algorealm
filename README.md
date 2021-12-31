@@ -202,7 +202,7 @@ Some compliancy checks are performed over the `trade.gtx` file before displaying
 ```shell
     * =========================== ORDER SUMMARY =========================== *
     
-       BUYER:		<BUYER_ADDRESS>
+       BUYER:	<BUYER_ADDRESS>
        SELLER:	<SELLER_ADDRESS>
        AMOUNT:	1.0 ALGO
        ROYALTY:	0.1 ALGO
