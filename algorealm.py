@@ -4,26 +4,26 @@ AlgoRealm, only generous heart will ever rule over Algorand. (by cusma)
 Usage:
   algorealm.py poem
   algorealm.py dynasty <purestake-api-token>
+  algorealm.py verify-order <purestake-api-token> <seller-address>
   algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
   algorealm.py claim-card <purestake-api-token> <mnemonic>
-  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--msg]
-  algorealm.py verify-order <seller-address>
+  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--notify]
   algorealm.py sell-card <purestake-api-token> <mnemonic>
   algorealm.py [--help]
 
 Commands:
   poem             AlgoRealm's poem.
   dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
+  verify-order     Verify the partially signed AlgoRealm Card buy order.
   claim-crown      Claim the Crown of Entropy, become the Randomic Majesty of Algorand.
   claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
-  review-order     Review the partially signed buy order.
   sell-card        Sell the AlgoRealm Card (paying a 10% royalty).
 
 Options:
-  -m --msg         Notify the Seller about your buy order on-chain.
+  -n --notify      Notify the Seller about your buy order on-chain.
   -h --help
 """
 
@@ -640,7 +640,14 @@ def verify_buy_order(seller_address: str):
     return trade_gtxn
 
 
-def order_summary(trade_gtxn: list):
+def order_summary(algod_client: algod.AlgodClient, trade_gtxn: list):
+
+    current_round = algod_client.status()["last-round"]
+    last_valid_round = trade_gtxn[2].transaction.last_valid_round
+    remaning_rounds = last_valid_round - current_round
+    if remaning_rounds <= 0:
+        remaning_rounds = 'Buy order expired!'
+
     return f"""
     * =========================== ORDER SUMMARY =========================== *
 
@@ -649,7 +656,7 @@ def order_summary(trade_gtxn: list):
        AMOUNT:\t{trade_gtxn[2].transaction.amt / 10 ** 6} ALGO
        ROYALTY:\t{(trade_gtxn[3].amt + trade_gtxn[4].amt) / 10 ** 6} ALGO
 
-       LAST VALID BLOCK: {trade_gtxn[2].transaction.last_valid_round}
+       BUY-ORDER VALIDITY REMAINING BLOCKS: {remaning_rounds}
 
     * ===================================================================== *
     """
@@ -730,9 +737,6 @@ def main():
     if args['poem']:
         return print(poem())
 
-    if args['verify-order']:
-        return print(order_summary(verify_buy_order(args['<seller-address>'])))
-
     # Clients
     token = args['<purestake-api-token>']
     header = {'X-Api-key': token}
@@ -748,6 +752,12 @@ def main():
         indexer_address=INDEXER_ADDRESS,
         headers=header
     )
+
+    if args['verify-order']:
+        summary = order_summary(
+            algod_client, verify_buy_order(args['<seller-address>'])
+        )
+        return print(summary)
 
     if args['dynasty']:
         print(
@@ -852,7 +862,7 @@ def main():
             price=amount
         )
 
-        if args['--msg']:
+        if args['--notify']:
             notify(algod_client, user, seller, trade_gtxn)
 
         return print(
