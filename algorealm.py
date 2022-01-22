@@ -541,7 +541,7 @@ def notify(
     algod_client.send_transactions([signed_txn])
     wait_for_confirmation(algod_client, tx_id)
     print("\n📄 Buy order notification:\n"
-          "https://mainnet.algoexplorer.io/tx/" + tx_id)
+          "https://algoexplorer.io/tx/" + tx_id)
 
 
 def verify_buy_order(seller_address: str):
