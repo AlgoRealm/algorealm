@@ -1,17 +1,10 @@
-```
-                           __  __   ___   __  __                           
-                           \*) \*)  \*/  (*/ (*/                           
-                            \*\_\*\_|O|_/*/_/*/                            
-                             \_______________/                             
-      _       __                 _______                  __               
-     / \     [  |               |_   __ \                [  |              
-    / _ \     | |  .--./)  .--.   | |__) |  .---.  ,--.   | |  _ .--..--.  
-   / ___ \    | | / /'`\;/ .'`\ \ |  __ /  / /__\\`'_\ :  | | [ `.-. .-. | 
- _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | | 
-|____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
-                 ( ( __))                                                  
-                                                                   by cusma
-```
+<p align="center"><a  href="https://github.com/cusma/algorealm"><img  width=100%  src="https://ipfs.algonode.xyz/ipfs/bafybeicqjdrwufixgun4quyble4kkvojouo3dnijuexx4wtnmt23p3dxeq"  border="0" /></a></p>
+
+<p align="center">
+    <a href="https://algorand.com"><img src="https://img.shields.io/badge/Powered by-Algorand-teal.svg" /></a>
+    <img  src="https://visitor-badge.glitch.me/badge?page_id=cusma.algorealm&right_color=teal" />
+    <a href="https://twitter.com/cusma_b"><img src="https://img.shields.io/badge/Created by-@cusma-teal.svg" /></a>
+</p>
 
 ## Incipit
 
@@ -39,18 +32,19 @@ Join [AlgoRealm channel](https://t.me/algorealm)!
 
 ## Play with AlgoRealm CLI
 
+
+### 0. Prerequisites
+
+-   [poetry](https://python-poetry.org/)
+-   [python >= 3.10](https://www.python.org/)
+
 ### 1. Setup
 
-1. Download the [`algorealm.py`](https://github.com/cusma/algorealm/blob/main/algorealm.py) script
-2. Install the following dependencies:
-
 ```shell
-$ pip3 install docopt --upgrade
-$ pip3 install msgpack --upgrade
-$ pip3 install py-algorand-sdk --upgrade
+$ poetry install # install dependencies
+$ poetry shell # activate virtual environment
+$ cd src # cd into source directory, to be replaced with UI webapp in future
 ```
-
-3. Create an account on PureStake and [get your API token](https://developer.purestake.io/login)
 
 ### 2. How to play
 
@@ -65,13 +59,13 @@ AlgoRealm, only generous heart will ever rule over Algorand. (by cusma)
 
 Usage:
   algorealm.py poem
-  algorealm.py dynasty <purestake-api-token>
-  algorealm.py verify-order <purestake-api-token> <seller-address>
-  algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
-  algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
-  algorealm.py claim-card <purestake-api-token> <mnemonic>
-  algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--notify]
-  algorealm.py sell-card <purestake-api-token> <mnemonic>
+  algorealm.py dynasty
+  algorealm.py verify-order <seller-address>
+  algorealm.py claim-crown <mnemonic> <majesty-name> <microalgos>
+  algorealm.py claim-sceptre <mnemonic> <majesty-name> <microalgos>
+  algorealm.py claim-card <mnemonic>
+  algorealm.py buy-order <mnemonic> <microalgos> [--notify]
+  algorealm.py sell-card <mnemonic>
   algorealm.py [--help]
 
 Commands:
@@ -104,24 +98,24 @@ $ ./goal app read --app-id 137491307 --global
 
 3. Discover it with the AlgoRealm CLI:
 ```shell
-$ python3 algorealm.py dynasty <purestake-api-token>
+$ python3 algorealm.py dynasty
 ```
 
 ```
-                               __  __   ___   __  __                           
-                               \*) \*)  \*/  (*/ (*/                           
-                                \*\_\*\_|O|_/*/_/*/                            
-                                 \_______________/                             
-          _       __                 _______                  __               
-         / \     [  |               |_   __ \                [  |              
-        / _ \     | |  .--./)  .--.   | |__) |  .---.  ,--.   | |  _ .--..--.  
-       / ___ \    | | / /'`\;/ .'`\ \ |  __ /  / /__\\`'_\ :  | | [ `.-. .-. | 
-     _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | | 
+                               __  __   ___   __  __
+                               \*) \*)  \*/  (*/ (*/
+                                \*\_\*\_|O|_/*/_/*/
+                                 \_______________/
+          _       __                 _______                  __
+         / \     [  |               |_   __ \                [  |
+        / _ \     | |  .--./)  .--.   | |__) |  .---.  ,--.   | |  _ .--..--.
+       / ___ \    | | / /'`\;/ .'`\ \ |  __ /  / /__\\`'_\ :  | | [ `.-. .-. |
+     _/ /   \ \_  | | \ \._//| \__. |_| |  \ \_| \__.,// | |, | |  | | | | | |
     |____| |____|[___].',__`  '.__.'|____| |___|'.__.'\'-;__/[___][___||__||__]
-                     ( ( __))                                                  
-                                  *** DYNASTY ***                              
-                                                                                   
-    
+                     ( ( __))
+                                  *** DYNASTY ***
+
+
 👑 jkbishbish claimed the Crown of Entropy
 on Block: 13578171 donating: 2 microALGOs to the Rewards Pool.
 
@@ -146,11 +140,11 @@ on Block: 14989913 donating: 4 microALGOs to the Rewards Pool.
 Chose your `<majesty-name>` and become part of the Dynasty! Remember that to dethrone the current Majesties you must donate to the Algorand's Rewards Pool more `<microalgos>` than the last donation.
 
 ```shell
-$ python3 algorealm.py claim-crown <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
+$ python3 algorealm.py claim-crown <mnemonic> <majesty-name> <microalgos>
 ```
 
 ```shell
-$ python3 algorealm.py claim-sceptre <purestake-api-token> <mnemonic> <majesty-name> <microalgos>
+$ python3 algorealm.py claim-sceptre <mnemonic> <majesty-name> <microalgos>
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -168,7 +162,7 @@ Only the generous heart of the [Great Majesty of Algorand](https://github.com/cu
 The AlgoRealm Card can be claimed **starting from block 16,250,000** using the command `claim-card`: hold strong both the Crown and the Sceptre and keep the throne until there!
 
 ```shell
-$ python3 algorealm.py claim-card <purestake-api-token> <mnemonic>
+$ python3 algorealm.py claim-card  <mnemonic>
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -180,7 +174,7 @@ As a **Buyer** you can easily place a **buy-order** proposal to the **Seller** u
 Using the  `--notify`  option the **Seller** will receive a notification on-chain, being acknowledge about the new buy-order proposal.
 
 ```shell
-$ python3 algorealm.py buy-order <purestake-api-token> <mnemonic> <microalgos> [--notify]
+$ python3 algorealm.py buy-order  <mnemonic> <microalgos> [--notify]
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -194,21 +188,21 @@ As a **Seller** you can review and verify the buy-order proposal, validating the
 The `verify-order` command requires your `<seller-address>` as argument.
 
 ```shell
-$ python3 algorealm.py verify-order <purestake-api-token> <seller-address>
+$ python3 algorealm.py verify-order  <seller-address>
 ```
 
 Some compliancy checks are performed over the `trade.gtx` file before displaying the buy-order summary:
 
 ```shell
     * =========================== ORDER SUMMARY =========================== *
-    
+
        BUYER:	<BUYER_ADDRESS>
        SELLER:	<SELLER_ADDRESS>
        AMOUNT:	1.0 ALGO
        ROYALTY:	0.1 ALGO
-       
+
        LAST VALID BLOCK: 13184621
-    
+
     * ===================================================================== *
 ```
 
@@ -219,7 +213,7 @@ If you agree with the buy-order proposal you can sell the AlgoRealm Special Card
 As a **Seller**, if you agree with the buy-order proposal, you can sell your AlgoRealm Special Card using the command `sell-card`.
 
 ```shell
-$ python3 algorealm.py sell-card <purestake-api-token> <mnemonic>
+$ python3 algorealm.py sell-card <mnemonic>
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -360,3 +354,12 @@ If you enjoyed AlgoRealm or find it useful as free and open source learning exam
 Here you find the [AlgoRealm slide deck](https://docs.google.com/presentation/d/1pkE_VWuq_zPOtkc8tK8MYKPzdBwUQA8r5UgACpBpmvk/edit?usp=sharing) presented at Algorand's Office Hours!
 
 Join [AlgoRealm channel](https://t.me/algorealm)!
+
+
+## ⭐️ Stargazers
+
+Special thanks to everyone who forked or starred the repository ❤️
+
+[![Stargazers repo roster for @AlgoWorldNFT/algoworld-contracts](https://reporoster.com/stars/dark/cusma/algorealm)](https://github.com/cusma/algorealm/stargazers)
+
+[![Forkers repo roster for @AlgoWorldNFT/algoworld-contracts](https://reporoster.com/forks/dark/cusma/algorealm)](https://github.com/cusma/algorealm/network/members)

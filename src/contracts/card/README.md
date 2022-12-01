@@ -4,7 +4,7 @@ The [AlgoRealm Card](https://algoexplorer.io/asset/321172366) is a unique [AlgoW
 
 
 <center>
- 
+
  <img src="https://user-images.githubusercontent.com/65770425/132135850-c4193efe-5d21-4cd6-a9bb-ae72b3d5b357.png" alt="algorealm_card" width="250" />
 
 </center>
@@ -230,7 +230,7 @@ Note that you have no counterparty risk, since `trade-2.stxn` can only be approv
 
 ### Trading role: Seller
 
-As **Seller**, you review the buy order proposal placed by the **Buyer** as *Unsigned Trade Group Transaction*. If you agree on the buy order proposal, you sign the AlgoRealm Card *Unsigned Trade Group Transaction* and submit it to the blockchain. 
+As **Seller**, you review the buy order proposal placed by the **Buyer** as *Unsigned Trade Group Transaction*. If you agree on the buy order proposal, you sign the AlgoRealm Card *Unsigned Trade Group Transaction* and submit it to the blockchain.
 
 Remember that, in doing so, there is no counterparty risk for both parties.
 
@@ -278,4 +278,3 @@ cat trade-0.stxn trade-1.stxn trade-2.stxn trade-3.stxn trade-4.stxn trade-5.stx
 ```shell
 ./goal clerk rawsend -f trade.sgtxn
 ```
-
