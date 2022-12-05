@@ -173,7 +173,7 @@ $ python3 algorealm.py claim-card  [--test]
 
 As a **Buyer** you can easily place a **buy-order** proposal to the **Seller** using the `buy-order` command. You just need to choose the `<microalgos>` amount for the buy order proposal.
 
-Using the  `--notify`  option the **Seller** will receive a notification on-chain, being acknowledge about the new buy-order proposal.
+Using the  `--notify`  option the **Seller** will receive a notification on-chain, being acknowledged about the new buy-order proposal.
 
 ```shell
 $ python3 algorealm.py buy-order <microalgos> [--notify] [--test]
@@ -181,7 +181,7 @@ $ python3 algorealm.py buy-order <microalgos> [--notify] [--test]
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
-As result, a *Partially Signed Trade Group Transaction* is created as `trade.gtx` file in the `algorealm.py` CLI directory. Note that there is **no counter-party risk** in this operation: as a **Buyer** you can safely send the `trade.gtxn` file to the **Seller**, being sure that the trade will be executed **if and only if** the Seller will transfers the AlgoRealm Special Card to you.
+As result, a *Partially Signed Trade Group Transaction* is created as `trade.gtx` file in the `algorealm.py` CLI directory. Note that there is **no counter-party risk** in this operation: as a **Buyer** you can safely send the `trade.gtxn` file to the **Seller**, being sure that the trade will be executed **if and only if** the Seller will transfer the AlgoRealm Special Card to you.
 
 ### 7. Verify a buy-order
 

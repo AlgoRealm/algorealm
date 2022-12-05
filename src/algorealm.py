@@ -298,7 +298,7 @@ def main():
         print(f"✏️ Placing order of: {util.microalgos_to_algos(amount)} ALGO\n")
 
         seller_address = query.current_owner(
-            indexer_client, CARD_ID, algorealm_first_round
+            indexer_client, CARD_ID, ALGOREALM_CARD_FIRST_BLOCK
         )
 
         trade_gtxn = actions.card_order(
