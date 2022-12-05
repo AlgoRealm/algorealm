@@ -4,7 +4,7 @@ import time
 from algosdk.error import IndexerHTTPError
 from algosdk.v2client.indexer import IndexerClient
 
-from constants import CONNECTION_ATTEMPT_DELAY_SEC, MAX_CONNECTION_ATTEMPTS
+from const import CONNECTION_ATTEMPT_DELAY_SEC, MAX_CONNECTION_ATTEMPTS
 
 
 def algorelm_calls(

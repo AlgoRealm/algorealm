@@ -38,7 +38,7 @@ from docopt import docopt
 
 import actions
 import query
-from constants import (
+from const import (
     ALGOD_ADDRESS,
     ALGOREALM_APP_ID,
     ALGOREALM_CARD_FIRST_BLOCK,

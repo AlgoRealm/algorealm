@@ -29,7 +29,7 @@ from algosdk.mnemonic import to_private_key
 from algosdk.util import microalgos_to_algos
 from algosdk.v2client.algod import AlgodClient
 
-from constants import (
+from const import (
     ASA_STATE_OBSERVER_APP_ID,
     CARD_ID,
     CROWN_ID,
