@@ -65,19 +65,19 @@ Usage:
   algorealm.py poem
   algorealm.py dynasty [--test]
   algorealm.py claim-majesty (--crown | --sceptre) <majesty-name> <microalgos> [--test]
-  algorealm.py claim-card [--test]
-  algorealm.py buy-order <microalgos> [--notify] [--test]
+  algorealm.py claim-card
+  algorealm.py buy-order <microalgos> [--notify]
   algorealm.py verify-order <seller-address>
-  algorealm.py sell-card [--test]
+  algorealm.py sell-card
   algorealm.py [--help]
 
 Commands:
   poem             AlgoRealm's poem.
   dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
-  verify-order     Verify the partially signed AlgoRealm Card buy order.
   claim-majesty    Claim the Crown of Entropy or the Sceptre of Proof, become Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
+  verify-order     Verify the partially signed AlgoRealm Card buy order.
   sell-card        Sell the AlgoRealm Card (paying a 10% royalty).
 
 Options:
