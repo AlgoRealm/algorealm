@@ -149,7 +149,7 @@ Chose your `<majesty-name>` and become part of the Dynasty! Remember that to det
 $ python3 claim-majesty (--crown | --sceptre) <majesty-name> <microalgos> [--test]
 ```
 
-⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `mnemonic` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 5. Claim the AlgoRealm Special Card
 
@@ -164,22 +164,22 @@ Only the generous heart of the [Great Majesty of Algorand](https://github.com/cu
 The AlgoRealm Card can be claimed **starting from block 16,250,000** using the command `claim-card`: hold strong both the Crown and the Sceptre and keep the throne until there!
 
 ```shell
-$ python3 algorealm.py claim-card  [--test]
+$ python3 algorealm.py claim-card [--test]
 ```
 
-⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `mnemonic` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 ### 6. Place a buy-order
 
 As a **Buyer** you can easily place a **buy-order** proposal to the **Seller** using the `buy-order` command. You just need to choose the `<microalgos>` amount for the buy order proposal.
 
-Using the  `--notify`  option the **Seller** will receive a notification on-chain, being acknowledged about the new buy-order proposal.
+Using the `--notify` option the **Seller** will receive a notification on-chain, being acknowledged about the new buy-order proposal.
 
 ```shell
 $ python3 algorealm.py buy-order <microalgos> [--notify] [--test]
 ```
 
-⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
+⚠️ Enter the the `mnemonic` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 As result, a *Partially Signed Trade Group Transaction* is created as `trade.gtx` file in the `algorealm.py` CLI directory. Note that there is **no counter-party risk** in this operation: as a **Buyer** you can safely send the `trade.gtxn` file to the **Seller**, being sure that the trade will be executed **if and only if** the Seller will transfer the AlgoRealm Special Card to you.
 
@@ -190,7 +190,7 @@ As a **Seller** you can review and verify the buy-order proposal, validating the
 The `verify-order` command requires your `<seller-address>` as argument.
 
 ```shell
-$ python3 algorealm.py verify-order  <seller-address>
+$ python3 algorealm.py verify-order <seller-address>
 ```
 
 Some compliancy checks are performed over the `trade.gtx` file before displaying the buy-order summary:
@@ -218,8 +218,7 @@ As a **Seller**, if you agree with the buy-order proposal, you can sell your Alg
 $ python3 algorealm.py sell-card [--test]
 ```
 
-⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
-
+⚠️ Enter the the `mnemonic` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
 
 
 ## Play with goal CLI
