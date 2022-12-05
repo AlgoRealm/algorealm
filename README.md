@@ -360,6 +360,6 @@ Join [AlgoRealm channel](https://t.me/algorealm)!
 
 Special thanks to everyone who forked or starred the repository ❤️
 
-[![Stargazers repo roster for @AlgoWorldNFT/algoworld-contracts](https://reporoster.com/stars/dark/cusma/algorealm)](https://github.com/cusma/algorealm/stargazers)
+[![Stargazers repo roster for @AlgoWorldNFT/algoworld-contracts](https://reporoster.com/stars/dark/AlgoRealm/algorealm)](https://github.com/AlgoRealm/algorealm/stargazers)
 
-[![Forkers repo roster for @AlgoWorldNFT/algoworld-contracts](https://reporoster.com/forks/dark/cusma/algorealm)](https://github.com/cusma/algorealm/network/members)
+[![Forkers repo roster for @AlgoWorldNFT/algoworld-contracts](https://reporoster.com/forks/dark/AlgoRealm/algorealm)](https://github.com/AlgoRealm/algorealm/network/members)
