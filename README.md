@@ -14,10 +14,10 @@ When nothing but Entropy was there.
 Then came the cryptographic Proof,
 And took it care.
 
-Verifiability of randomness,
+Verifiability of Randomness,
 Since genesis block,
 Brings Consensus over realm vastness,
-So Algorand never fork.
+So Algorand shall not fork.
 ```
 
 ## Become a Majesty of Algorand
@@ -29,6 +29,10 @@ Show how generous is your heart donating some ALGOs to the [Rewards Pool](https:
 The more generous you are, the harder will be to be dethroned.
 
 Join [AlgoRealm channel](https://t.me/algorealm)!
+
+## Play with AlgoRealm CLI Web Emulator
+
+Play [AlgoRealm on CLI web emulator](https://algorealm.vercel.app/console) by [@aorumbayev](https://github.com/aorumbayev).
 
 ## Play with AlgoRealm CLI
 
@@ -59,31 +63,33 @@ AlgoRealm, only generous heart will ever rule over Algorand. (by cusma)
 
 Usage:
   algorealm.py poem
-  algorealm.py dynasty
+  algorealm.py dynasty [--test]
+  algorealm.py claim-majesty (--crown | --sceptre) <majesty-name> <microalgos> [--test]
+  algorealm.py claim-card [--test]
+  algorealm.py buy-order <microalgos> [--notify] [--test]
   algorealm.py verify-order <seller-address>
-  algorealm.py claim-crown <mnemonic> <majesty-name> <microalgos>
-  algorealm.py claim-sceptre <mnemonic> <majesty-name> <microalgos>
-  algorealm.py claim-card <mnemonic>
-  algorealm.py buy-order <mnemonic> <microalgos> [--notify]
-  algorealm.py sell-card <mnemonic>
+  algorealm.py sell-card [--test]
   algorealm.py [--help]
 
 Commands:
   poem             AlgoRealm's poem.
   dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
   verify-order     Verify the partially signed AlgoRealm Card buy order.
-  claim-crown      Claim the Crown of Entropy, become the Randomic Majesty of Algorand.
-  claim-sceptre    Claim the Sceptre of Proof, become the Verifiable Majesty of Algorand.
+  claim-majesty    Claim the Crown of Entropy or the Sceptre of Proof, become Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
   sell-card        Sell the AlgoRealm Card (paying a 10% royalty).
 
 Options:
-  -n --notify      Notify the Seller about your buy order on-chain.
-  -h --help
+  -n, --notify    Notify the Seller about your buy order on-chain.
+  -t, --test      TestNet mode
+  -h, --help
 ```
 
 ⚠️ Keep your `<mnemonic>` safe! Although you will only use it on you local machine, is it strongly recommended to make use of a dedicated account just to play AlgoRealm!
+
+> In case you want to give a try, you can play AlgoRealm on TestNet adding `-t`
+> to CLI commands.
 
 ### 3. AlgoRealm Dynasty
 
@@ -140,11 +146,7 @@ on Block: 14989913 donating: 4 microALGOs to the Rewards Pool.
 Chose your `<majesty-name>` and become part of the Dynasty! Remember that to dethrone the current Majesties you must donate to the Algorand's Rewards Pool more `<microalgos>` than the last donation.
 
 ```shell
-$ python3 algorealm.py claim-crown <mnemonic> <majesty-name> <microalgos>
-```
-
-```shell
-$ python3 algorealm.py claim-sceptre <mnemonic> <majesty-name> <microalgos>
+$ python3 claim-majesty (--crown | --sceptre) <majesty-name> <microalgos> [--test]
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -162,7 +164,7 @@ Only the generous heart of the [Great Majesty of Algorand](https://github.com/cu
 The AlgoRealm Card can be claimed **starting from block 16,250,000** using the command `claim-card`: hold strong both the Crown and the Sceptre and keep the throne until there!
 
 ```shell
-$ python3 algorealm.py claim-card  <mnemonic>
+$ python3 algorealm.py claim-card  [--test]
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -174,7 +176,7 @@ As a **Buyer** you can easily place a **buy-order** proposal to the **Seller** u
 Using the  `--notify`  option the **Seller** will receive a notification on-chain, being acknowledge about the new buy-order proposal.
 
 ```shell
-$ python3 algorealm.py buy-order  <mnemonic> <microalgos> [--notify]
+$ python3 algorealm.py buy-order <microalgos> [--notify] [--test]
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -213,7 +215,7 @@ If you agree with the buy-order proposal you can sell the AlgoRealm Special Card
 As a **Seller**, if you agree with the buy-order proposal, you can sell your AlgoRealm Special Card using the command `sell-card`.
 
 ```shell
-$ python3 algorealm.py sell-card <mnemonic>
+$ python3 algorealm.py sell-card [--test]
 ```
 
 ⚠️ Enter the the `<mnemonic>` formatting it as: `"word_1 word_2 word_3 ... word_25"` and keep it safe!
@@ -354,7 +356,6 @@ If you enjoyed AlgoRealm or find it useful as free and open source learning exam
 Here you find the [AlgoRealm slide deck](https://docs.google.com/presentation/d/1pkE_VWuq_zPOtkc8tK8MYKPzdBwUQA8r5UgACpBpmvk/edit?usp=sharing) presented at Algorand's Office Hours!
 
 Join [AlgoRealm channel](https://t.me/algorealm)!
-
 
 ## ⭐️ Stargazers
 
