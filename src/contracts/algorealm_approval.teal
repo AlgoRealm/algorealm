@@ -1,63 +1,103 @@
+// AlgoRealm Application
 #pragma version 2
+
+// If is an App Creation
 txn ApplicationID
 int 0
 ==
+// Then jump to `algorealm_creation`
 bnz algorealm_creation
+
+// Else jump to `algorealm`
 txn OnCompletion
 int NoOp
 ==
 bnz algorealm
+
+// Reject in any other case
 int 0
 return
+
 algorealm_creation:
+// Initialize the `RandomicMajestyOfAlgorand`
 byte "RandomicMajestyOfAlgorand"
 byte "Silvio"
 app_global_put
+
+// Initialize the `VerifiableMajestyOfAlgorand`
 byte "VerifiableMajestyOfAlgorand"
 byte "Silvio"
 app_global_put
+
+// Initialize the `CrownOfEntropyDonation`
 byte "CrownOfEntropyDonation"
 int 0
 app_global_put
+
+// Initialize the `SceptreOfProofDonation`
 byte "SceptreOfProofDonation"
 int 0
 app_global_put
+
+// Approve
 int 1
 return
 b end_algorealm
+
 algorealm:
+// If is a single txn
 global GroupSize
 int 1
 ==
+// Then jump to `algorealm_law` setup
 bnz algorealm_law
+
+// Else if a groupo of 3 txns
 global GroupSize
 int 3
 ==
+// Then jump to `algorealm_claims`
 bnz algorealm_claims
+
+// Reject in any other case
 int 0
 return
 b end_algorealm
+
 algorealm_law:
+// Check if AlgoRealmLaw exists
 int 0
 byte "AlgoRealmLaw"
 app_global_get_ex
 store 0
 store 1
+
+// If AlgoRealmLaw has been already promulgated
 load 0
+// Then jump to `promulgate_law_failure`
 bnz promulgate_law_failure
+
+// Else promulgate the AlgoRealmLaw
 byte "AlgoRealmLaw"
 txna ApplicationArgs 0
 app_global_put
 b promulgate_law
+
 promulgate_law_failure:
+// Reject
 int 0
 return
 b end_algorealm
+
 promulgate_law:
+// Approve
 int 1
 return
 b end_algorealm
+
+
 algorealm_claims:
+// If the first txn is an AppCall with 2 args
 gtxn 0 TypeEnum
 int appl
 ==
@@ -65,10 +105,14 @@ gtxn 0 NumAppArgs
 int 2
 ==
 &&
+
+// And the second txn is a Payment donation
 gtxn 1 TypeEnum
 int pay
 ==
 &&
+
+// And the thirs txn must is an NFT AssetTransfer executed by the AlgoRealmLaw
 gtxn 2 TypeEnum
 int axfer
 ==
@@ -78,57 +122,88 @@ byte "AlgoRealmLaw"
 app_global_get
 ==
 &&
+
+// Then jump to `claims`
 bnz claims
+
+// Reject in any other case
 int 0
 return
 b end_algorealm
+
 claims:
+// If first arg is "Crown"
 gtxna 0 ApplicationArgs 0
 byte "Crown"
 ==
+// The jump to `claim_crown`
 bnz claim_crown
+
+// If first arg is "Sceptre"
 gtxna 0 ApplicationArgs 0
 byte "Sceptre"
 ==
+// The jump to `claim_sceptre`
 bnz claim_sceptre
+
+// Reject in any other case
 int 0
 return
 b end_algorealm
+
 claim_crown:
+// If `CrownOfEntropyDonation` is greater than previous one
 gtxn 1 Amount
 byte "CrownOfEntropyDonation"
 app_global_get
 >
+// Then jump to `randomic_majesty`
 bnz randomic_majesty
+
+// Else reject
 int 0
 return
 b end_algorealm
+
 randomic_majesty:
+// Set the `RandomicMajestyOfAlgorand` name to second args
 byte "RandomicMajestyOfAlgorand"
 gtxna 0 ApplicationArgs 1
 app_global_put
+// Set the `CrownOfEntropyDonation` to current donation
 byte "CrownOfEntropyDonation"
 gtxn 1 Amount
 app_global_put
+// Approve
 int 1
 return
 b end_algorealm
+
 claim_sceptre:
+// If `SceptreOfProofDonation` is greater than previous one
 gtxn 1 Amount
 byte "SceptreOfProofDonation"
 app_global_get
 >
+// Then jump to `verifiable_majesty`
 bnz verifiable_majesty
+
+// Else reject
 int 0
 return
 b end_algorealm
+
 verifiable_majesty:
+// Set the `VerifiableMajestyOfAlgorand` name to second args
 byte "VerifiableMajestyOfAlgorand"
 gtxna 0 ApplicationArgs 1
 app_global_put
+// Set the `SceptreOfProofDonation` to current donation
 byte "SceptreOfProofDonation"
 gtxn 1 Amount
 app_global_put
+// Approve
 int 1
 return
+
 end_algorealm:
