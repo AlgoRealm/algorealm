@@ -95,9 +95,8 @@ int 1
 return
 b end_algorealm
 
-
 algorealm_claims:
-// If the first txn is an AppCall with 2 args
+// First txn must be an AppCall with 2 args
 gtxn 0 TypeEnum
 int appl
 ==
@@ -106,13 +105,13 @@ int 2
 ==
 &&
 
-// And the second txn is a Payment donation
+// Second txn must be a Payment donation
 gtxn 1 TypeEnum
 int pay
 ==
 &&
 
-// And the thirs txn must is an NFT AssetTransfer executed by the AlgoRealmLaw
+// Third txn must be an NFT AssetTransfer executed by the AlgoRealmLaw
 gtxn 2 TypeEnum
 int axfer
 ==
@@ -123,7 +122,7 @@ app_global_get
 ==
 &&
 
-// Then jump to `claims`
+// If so, jump to `claims`
 bnz claims
 
 // Reject in any other case
