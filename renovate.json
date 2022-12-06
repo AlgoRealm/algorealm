@@ -4,7 +4,7 @@
     "ignoreDeps": [],
     "schedule": "before 3am on the first day of the month",
     "assignees": ["cusma"],
-    "baseBranches": ["main"],
+    "baseBranches": ["develop"],
     "separateMajorMinor": true,
     "rebaseStalePrs": true,
     "lockFileMaintenance": {
