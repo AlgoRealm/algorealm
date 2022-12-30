@@ -1,0 +1,75 @@
+// AlgoRealm Law
+#pragma version 2
+
+// Must be a Group of 3 txns
+global GroupSize
+int 3
+==
+
+// First txn must be an AppCall
+gtxn 0 TypeEnum
+int appl
+==
+// To the AlgoRealm App
+gtxn 0 ApplicationID
+int TMPL_ALGOREALM_APP_ID
+==
+&&
+&&
+
+// Second txn must be a Payment donation
+gtxn 1 TypeEnum
+int pay
+==
+// From the AlgoRealm App caller
+gtxn 1 Sender
+gtxn 0 Sender
+==
+&&
+// To the Rewards Pool
+gtxn 1 Receiver
+addr 737777777777777777777777777777777777777777777777777UFEJ2CI
+==
+&&
+&&
+
+// Third txn must be the NFT AssetTransfer
+gtxn 2 TypeEnum
+int axfer
+==
+// To the AlgoRealm donor
+gtxn 2 AssetReceiver
+gtxn 1 Sender
+==
+&&
+// Either of the Crown of Entropy
+gtxn 2 XferAsset
+int TMPL_CROWN_ASA_ID
+==
+// Or of the Sceptre of Proof
+gtxn 2 XferAsset
+int TMPL_SCEPTRE_ASA_ID
+==
+||
+&&
+// The transfer is of a unique NFT
+gtxn 2 AssetAmount
+int 1
+==
+&&
+// Paying at most 1000 microAlgos as txn fee
+gtxn 2 Fee
+int 1000
+<=
+&&
+// With no AssetCloseTo
+gtxn 2 AssetCloseTo
+global ZeroAddress
+==
+&&
+// With no RekeyTo
+gtxn 2 RekeyTo
+global ZeroAddress
+==
+&&
+&&
