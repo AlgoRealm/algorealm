@@ -64,6 +64,8 @@ AlgoRealm, only generous heart will ever rule over Algorand. (by cusma)
 Usage:
   algorealm.py poem
   algorealm.py dynasty [--test]
+  algorealm.py longevity (--crown | --sceptre) [--test]
+  algorealm.py braveness (--crown | --sceptre) [--test]
   algorealm.py claim-majesty (--crown | --sceptre) <majesty-name> <microalgos> [--test]
   algorealm.py claim-card
   algorealm.py buy-order <microalgos> [--notify]
@@ -74,6 +76,8 @@ Usage:
 Commands:
   poem             AlgoRealm's poem.
   dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
+  longevity        Print AlgoRealm's Majesties longevity.
+  braveness        Print AlgoRealm's Majesties braveness.
   claim-majesty    Claim the Crown of Entropy or the Sceptre of Proof, become Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
@@ -91,7 +95,7 @@ Options:
 > In case you want to give a try, you can play AlgoRealm on TestNet adding `-t`
 > to CLI commands.
 
-### 3. AlgoRealm Dynasty
+### 3. AlgoRealm Dynasty, Longevity and Braveness
 
 Who are the Majesties of the Algorand realm?
 
@@ -140,6 +144,56 @@ on Block: 14989913 donating: 4 microALGOs to the Rewards Pool.
 🪄 nullun claimed the Sceptre of Proof
 on Block: 14989913 donating: 4 microALGOs to the Rewards Pool.
 ```
+
+4. Which was the longest lasting Majesty?
+```shell
+$ python3 algorealm.py longevity --crown
+```
+
+```
+   *** 👑 RANDOMIC MAJESTY LONGEVITY ***
+
++--------------------+--------------------+
+|    Majesty Name    | Longevity (blocks) |
++--------------------+--------------------+
+| MillionAlgosFather |      5768768       |
+|       nullun       |      3366046       |
+|     jkbishbish     |      1357847       |
+|        Matt        |      1248429       |
+|      renangeo      |       416539       |
+|        👑🅿️        |       158346       |
+|        tmc         |       53895        |
+| MillionAlgosFather |       32978        |
+|       nullun       |        3369        |
++--------------------+--------------------+
+```
+
+5. Who is the bravest Majesty of all time?
+```shell
+$ python3 algorealm.py braveness --crown
+```
+
+```
+*** 👑 RANDOMIC MAJESTY BRAVENESS ***
+
++--------------------+-----------+
+|    Majesty Name    | Braveness |
++--------------------+-----------+
+|      renangeo      |   7.824   |
+| MillionAlgosFather |   4.605   |
+|        👑🅿️        |   1.609   |
+|     jkbishbish     |     1     |
+|        tmc         |   0.405   |
+|       nullun       |   0.288   |
+|       nullun       |    0.0    |
+| MillionAlgosFather |    0.0    |
+|        Matt        |    0.0    |
++--------------------+-----------+
+```
+
+> Braveness is based on the relative gorwth of donation amounts (`d'`, `d`):
+>
+> `braveness = ln(d') - ln(d)`
 
 ### 4. Claim the Crown of Entropy or the Sceptre of Proof
 

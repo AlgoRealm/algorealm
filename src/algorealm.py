@@ -4,6 +4,8 @@ AlgoRealm, only generous heart will ever rule over Algorand. (by cusma)
 Usage:
   algorealm.py poem
   algorealm.py dynasty [--test]
+  algorealm.py longevity (--crown | --sceptre) [--test]
+  algorealm.py braveness (--crown | --sceptre) [--test]
   algorealm.py claim-majesty (--crown | --sceptre) <majesty-name> <microalgos> [--test]
   algorealm.py claim-card
   algorealm.py buy-order <microalgos> [--notify]
@@ -14,6 +16,8 @@ Usage:
 Commands:
   poem             AlgoRealm's poem.
   dynasty          Print the glorious dynasty of AlgoRealm's Majesties.
+  longevity        Print AlgoRealm's Majesties longevity.
+  braveness        Print AlgoRealm's Majesties braveness.
   claim-majesty    Claim the Crown of Entropy or the Sceptre of Proof, become Majesty of Algorand.
   claim-card       Brake the spell and claim the AlgoRealm Card by AlgoWorld.
   buy-order        Place an order for the AlgoRealm Card.
@@ -35,6 +39,7 @@ from algosdk.future.transaction import retrieve_from_file
 from algosdk.v2client.algod import AlgodClient
 from algosdk.v2client.indexer import IndexerClient
 from docopt import docopt
+from prettytable import PrettyTable
 
 import actions
 import query
@@ -135,60 +140,96 @@ def main():
     algod_client = build_algod_client(test=args["--test"])
     indexer_client = build_indexer_client(test=args["--test"])
 
+    if args["--test"]:
+        crown_nft_id = TEST_CROWN_ID
+        sceptre_nft_id = TEST_SCEPTRE_ID
+        algorealm_app_id = TEST_ALGOREALM_APP_ID
+        algorealm_contract = TEST_ALGOREALM_LAW_BYTECODE
+        algorealm_first_round = TEST_ALGOREALM_FIRST_BLOCK
+    else:
+        crown_nft_id = CROWN_ID
+        sceptre_nft_id = SCEPTRE_ID
+        algorealm_app_id = ALGOREALM_APP_ID
+        algorealm_contract = ALGOREALM_LAW_BYTECODE
+        algorealm_first_round = ALGOREALM_FIRST_BLOCK
+
     # CLI
     if args["dynasty"]:
-        if args["--test"]:
-            algorealm_app_id = TEST_ALGOREALM_APP_ID
-            algorealm_first_round = TEST_ALGOREALM_FIRST_BLOCK
+        claims = query.claims_history(
+            client=indexer_client,
+            algorealm_app_id=algorealm_app_id,
+            algorealm_first_round=algorealm_first_round,
+        )
+
+        print("\t\t\t\t*** DYNASTY ***\n")
+        return print(*["\n", *query.dynasty(claims)])
+
+    if args["longevity"]:
+        claims = query.claims_history(
+            client=indexer_client,
+            algorealm_app_id=algorealm_app_id,
+            algorealm_first_round=algorealm_first_round,
+        )
+        latest_block = algod_client.status()["last-round"]
+
+        if args["--crown"]:
+            majesty_title = "👑 RANDOMIC"
+            claim_select = "Crown"
         else:
-            algorealm_app_id = ALGOREALM_APP_ID
-            algorealm_first_round = ALGOREALM_FIRST_BLOCK
-        print(
-            r"""
-                                   *** DYNASTY ***
-            """
+            majesty_title = "🪄 VERIFIABLE"
+            claim_select = "Sceptre"
+
+        majesty_longevity = query.longevity(claims, latest_block, claim_select)
+
+        longevity_table = PrettyTable()
+        longevity_table.field_names = ["Majesty Name", "Longevity (blocks)"]
+        longevity_table.add_rows(
+            [[claim["name"], claim["longevity"]] for claim in majesty_longevity]
         )
-        return print(
-            *[
-                "\n",
-                *query.history(
-                    client=indexer_client,
-                    algorealm_app_id=algorealm_app_id,
-                    algorealm_first_round=algorealm_first_round,
-                ),
-            ]
+
+        print(f"\t\t*** {majesty_title} MAJESTY LONGEVITY ***\n")
+        return print(longevity_table)
+
+    if args["braveness"]:
+        claims = query.claims_history(
+            client=indexer_client,
+            algorealm_app_id=algorealm_app_id,
+            algorealm_first_round=algorealm_first_round,
         )
+
+        if args["--crown"]:
+            majesty_title = "👑 RANDOMIC"
+            claim_select = "Crown"
+        else:
+            majesty_title = "🪄 VERIFIABLE"
+            claim_select = "Sceptre"
+
+        majesty_braveness = query.braveness(claims, claim_select)
+
+        braveness_table = PrettyTable()
+        braveness_table.field_names = ["Majesty Name", "Braveness"]
+        braveness_table.add_rows(
+            [[claim["name"], claim["braveness"]] for claim in majesty_braveness]
+        )
+
+        print(f"\t\t*** {majesty_title} MAJESTY BRAVENESS ***\n")
+        return print(braveness_table)
 
     if args["claim-majesty"]:
         majesty_name = args["<majesty-name>"]
-
-        if args["--test"]:
-            algorealm_first_round = TEST_ALGOREALM_FIRST_BLOCK
-            algorealm_contract = TEST_ALGOREALM_LAW_BYTECODE
-            algorealm_app_id = TEST_ALGOREALM_APP_ID
-        else:
-            algorealm_first_round = ALGOREALM_FIRST_BLOCK
-            algorealm_contract = ALGOREALM_LAW_BYTECODE
-            algorealm_app_id = ALGOREALM_APP_ID
 
         if args["--crown"]:
             proclaim = (
                 f"\n👑 Glory to {majesty_name}, the Randomic Majesty of Algorand! 🎉\n"
             )
             claim_select = "Crown"
-            if args["--test"]:
-                nft_id = TEST_CROWN_ID
-            else:
-                nft_id = CROWN_ID
+            nft_id = crown_nft_id
         else:
             proclaim = (
                 f"\n🪄 Glory to {majesty_name}, the Verifiable Majesty of Algorand! 🎉\n"
             )
             claim_select = "Sceptre"
-            if args["--test"]:
-                nft_id = TEST_SCEPTRE_ID
-            else:
-                nft_id = SCEPTRE_ID
+            nft_id = sceptre_nft_id
 
         user = actions.get_user()
         algorealm_law = actions.get_contract_account(algorealm_contract)
