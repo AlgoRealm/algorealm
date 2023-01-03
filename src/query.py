@@ -1,5 +1,7 @@
 import base64
+import math
 import time
+from operator import itemgetter
 
 from algosdk.error import IndexerHTTPError
 from algosdk.v2client.indexer import IndexerClient
@@ -73,11 +75,11 @@ def algorelm_nft_txns(
     return nft_txns
 
 
-def history(
+def claims_history(
     client: IndexerClient,
     algorealm_app_id: int,
     algorealm_first_round: int,
-) -> list:
+) -> list[dict]:
     """
     Retrieve the AlgoRealm Majesties claims history from chain.
 
@@ -111,42 +113,27 @@ def history(
     if not calls:
         quit("❌ Unable to connect to Indexer Client!")
 
-    claims_history = []
-    name = ""
-    claim = ""
+    claims = []
     for call in calls:
         call_args = call["application-transaction"]["application-args"]
         # Check is an NFT claim call
         if len(call_args) == 2:
-            block = call["confirmed-round"]
-            nft = call_args[0].encode()
-            donation = call["global-state-delta"][0]["value"]["uint"]
-            # Check is a different claimer (2 elements in the state delta)
-            if len(call["global-state-delta"]) == 2:
-                name = base64.b64decode(
-                    call["global-state-delta"][1]["value"]["bytes"]
-                ).decode()
-            if nft == base64.b64encode(b"Crown"):
-                claim = (
-                    f"👑 {name} claimed the Crown of Entropy\n"
-                    f"on Block: {block} donating: {donation} microALGOs "
-                    f"to the Rewards Pool.\n\n"
-                )
-            elif nft == base64.b64encode(b"Sceptre"):
-                claim = (
-                    f"🪄 {name} claimed the Sceptre of Proof\n"
-                    f"on Block: {block} donating: {donation} microALGOs "
-                    f"to the Rewards Pool.\n\n"
-                )
+            claim = {
+                "block": call["confirmed-round"],
+                "nft": base64.b64decode(call_args[0]).decode(),
+                "name": base64.b64decode(call_args[1]).decode(),
+                "donation": call["global-state-delta"][0]["value"]["uint"],
+            }
+            if claim["nft"] == "Crown":
+                claim["symbol"] = "👑"
+                claim["nft_name"] = "Crown of Entropy"
+                claim["title"] = "Randomic Majesty"
             else:
-                pass
-
-            claims_history += [claim]
-
-        else:
-            pass
-
-    return claims_history
+                claim["symbol"] = "🪄"
+                claim["nft_name"] = "Sceptre of Proof"
+                claim["title"] = "Verifiable Majesty"
+            claims += [claim]
+    return claims
 
 
 def current_owner(
@@ -191,3 +178,55 @@ def current_owner(
     for txn in nft_txns:
         if txn["asset-transfer-transaction"]["amount"] == 1:
             return txn["asset-transfer-transaction"]["receiver"]
+
+
+def dynasty(claims: list[dict]) -> list:
+    majesty_claims = []
+    for claim in claims:
+        majesty = (
+            f"{claim['symbol']} {claim['name']} became the {claim['title']} "
+            f"on Block: {claim['block']}\n"
+            f"claiming the {claim['nft_name']} with a donation of:\n"
+            f"{claim['donation']} microALGOs to the Rewards Pool.\n\n"
+        )
+        majesty_claims += [majesty]
+    return majesty_claims
+
+
+def longevity(
+    claims: list[dict], latest_block: int, majesty_selector: str
+) -> list[dict]:
+    assert majesty_selector == "Crown" or majesty_selector == "Sceptre"
+
+    majesty_claims = []
+    for claim in claims:
+        if claim["nft"] == majesty_selector:
+            majesty_claims += [claim]
+
+    claim_block = [claim["block"] for claim in majesty_claims]
+    majesty_longevity = [
+        new - old for new, old in zip(claim_block[1:], claim_block[:-1])
+    ]
+    majesty_longevity.append(latest_block - claim_block[-1])
+
+    for claim, blocks in zip(majesty_claims, majesty_longevity):
+        claim["longevity"] = blocks
+    return sorted(majesty_claims, key=itemgetter("longevity"), reverse=True)
+
+
+def braveness(claims: list[dict], majesty_selector: str) -> list[dict]:
+    assert majesty_selector == "Crown" or majesty_selector == "Sceptre"
+
+    majesty_claims = []
+    for claim in claims:
+        if claim["nft"] == majesty_selector:
+            majesty_claims += [claim]
+    claim_donation = [claim["donation"] for claim in majesty_claims]
+
+    majesty_braveness = [1]
+    for new, old in zip(claim_donation[1:], claim_donation[:-1]):
+        majesty_braveness.append(math.log(new) - math.log(old))
+
+    for claim, points in zip(majesty_claims, majesty_braveness):
+        claim["braveness"] = round(points, 3)
+    return sorted(majesty_claims, key=itemgetter("braveness"), reverse=True)
